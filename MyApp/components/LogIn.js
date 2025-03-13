@@ -16,7 +16,7 @@ export default function LogIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [serverError, setServerError] = useState('');
 
-  // 🔥 Moved `isFormValid` inside the function
+  // Moved `isFormValid` inside the function
   const isFormValid = () => email.trim() !== '' && password.trim() !== '';
 
   const handleEmailPasswordLogin = async () => {
@@ -27,17 +27,17 @@ export default function LogIn() {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken(true);  // 🔥 Always refresh token
+      const idToken = await userCredential.user.getIdToken(true);  // Always refresh token
 
       console.log("Sending token to backend:", idToken);  // Debugging log
 
-      const response = await fetch('http://192.168.1.20:3000/auth/login', {
+      const response = await fetch('http://192.168.1.14:3000/auth/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`  // 🔥 Send token in Authorization header
+          'Authorization': `Bearer ${idToken}`  // Send token in Authorization header
         },
-        body: JSON.stringify({ idToken }) // 🔥 Added missing body
+        body: JSON.stringify({ idToken }) // Added missing body
       });
 
       const data = await response.json();
@@ -45,7 +45,7 @@ export default function LogIn() {
 
       if (response.ok) {
         console.log("Connexion réussie:", data);
-        navigation.navigate('Home');  // 🔥 Navigate to Home only if login is successful
+        navigation.navigate('Home');  // Navigate to Home only if login is successful
       } else {
         setServerError(data.error || 'Erreur inconnue');
       }

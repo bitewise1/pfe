@@ -1,5 +1,6 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // ✅ Import Firestore
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXtJYV_D9NWboBjLIsLmKdUs8E4MV7IsQ",
@@ -11,8 +12,12 @@ const firebaseConfig = {
   measurementId: "G-D67TZBLB7E"
 };
 
-// Ensure Firebase is initialized only once
-const firebaseApp = initializeApp(firebaseConfig);
+// 🔥 Ensure Firebase is initialized only once
+const firebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// ✅ Initialize Firebase Auth and Firestore
 export const auth = getAuth(firebaseApp);
+export const db = getFirestore(firebaseApp); // ✅ Firestore instance
+
 export default firebaseApp;
 

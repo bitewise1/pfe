@@ -34,9 +34,10 @@ export default function AppNavigator(){
             <Stack.Navigator screenOptions={{headerShown: false}}> 
                 <Stack.Screen name='WelcomeScreen' component={WelcomeScreen}/> 
                 <Stack.Screen name='LogIn' component={LogIn} />
+                <Stack.Screen name='UserType' component={UserType}/>
+                <Stack.Screen name='SignUp' component={SignUp}/>
                 <Stack.Screen name='NameScreen' component={NameScreen} />
                 <Stack.Screen name='ResetPassword' component={ResetPassword}/>
-                <Stack.Screen name='UserType' component={UserType}/>
                 <Stack.Screen name='goalScreen' component={goalScreen}/>
                 <Stack.Screen name= 'SettingProfile' component={SettingProfile}/>
                 <Stack.Screen name='NutritionForm' component={NutritionForm}/>
@@ -45,7 +46,6 @@ export default function AppNavigator(){
                 <Stack.Screen name='DietaryPreferences' component={DietaryPreferences}/>
                 <Stack.Screen name='ActivityLevel' component={ActivityLevel}/>
                 <Stack.Screen name='Gratitude' component={Gratitude}/>
-                <Stack.Screen name='SignUp' component={SignUp}/>
                 <Stack.Screen name='Home' component={Home}/>
                 <Stack.Screen name='Chatbot' component={Chatbot}/>
                 <Stack.Screen name='Profile' component={Profile}/>

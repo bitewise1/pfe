@@ -10,18 +10,48 @@ export default function NameScreen() {
   const route = useRoute ();
   const navigation = useNavigation();
   const [name, setName] = useState('');
-  const {userType} = route.params;
-  const handleNext = () =>{
-    if (name.trim() && userType === 'Personal'){
-      navigation.navigate('goalScreen', {userName: name.trim()}); 
-    } else if (name.trim() && userType === 'Professional'){
-      navigation.navigate('NutritionForm', {userName: name.trim()}); }
-    else {
-      Alert.alert('Please enter your name');
-      
+  const [lastName, setLastName] = useState('');
+  const { userType, uid } = route.params;
+  const handleNext = async () => {
+    if (!name.trim() || !lastName.trim()) {
+      Alert.alert('Error', 'Please enter both first and last names.');
+      return;
     }
-      
-  }
+
+    const API_URL = "http://192.168.1.14:3000/user/updateProfile"; 
+
+    const requestBody = {
+      uid, // Send actual user ID
+      firstName: name.trim(),
+      lastName: lastName.trim(),
+      userType
+    };
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Profile Updated:", data);
+        if (userType === "Personal") {
+          navigation.navigate("goalScreen", { userName: name.trim() });
+        } else if (userType === "Professional") {
+          navigation.navigate("NutritionForm", { userName: name.trim() });
+        }
+      } else {
+        Alert.alert("Error", data.error || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -36,14 +66,12 @@ export default function NameScreen() {
           <Image style={styles.orange} source={require('../assets/Images/orangeExtraction.png')}/>
       </View>
       <Text style={styles.secondaryText}>What is your first name ?</Text>
-      <TextInput style={styles.input} placeholder='First Name' keyboardType= 'name-phone-pad' autoCapitalize="words" onChangeText={(text) => setName(text)}
- />
+      <TextInput style={styles.input} placeholder='First Name' keyboardType= 'default' autoCapitalize="words" value={name} onChangeText={setName} />
       <Text style={styles.secondaryText}>What is your last name ?</Text>
-      <TextInput style={styles.input} placeholder='Last Name' keyboardType= 'name-phone-pad' autoCapitalize="words"
-      />
+      <TextInput style={styles.input} placeholder='Last Name' keyboardType= 'default' autoCapitalize="words" value={lastName} onChangeText={setLastName}/>
         <View style={styles.buttonContainer}>
             <Button mode= 'contained' style={styles.button} labelStyle={styles.textButton} onPress={() => {
-              handleNext(); //save the state 
+              handleNext(); 
              } }>Next</Button>
         </View>
 

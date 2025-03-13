@@ -1,9 +1,9 @@
 const admin = require("firebase-admin");
 
-// 🔹 Charger le fichier `serviceAccountKey.json`
-const serviceAccount = require("./bitewise-4d93e-firebase-adminsdk-fbsvc-1fd9144025.json"); // Assurez-vous que le nom est correct
+// Charger le fichier `serviceAccountKey.json`
+const serviceAccount = require("./bitewise-4d93e-firebase-adminsdk-fbsvc-b20ed2ebb5.json"); 
 
-// 🔹 Initialisation de Firebase Admin SDK
+// Initialisation de Firebase Admin SDK
 if (!admin.apps.length) {
   try {
     console.log(" Initialisation de Firebase Admin SDK...");
@@ -18,11 +18,11 @@ if (!admin.apps.length) {
   }
 }
 
-// 🔹 Initialisation de Firestore et Auth
+// Initialisation de Firestore et Auth
 const db = admin.firestore();
 const auth = admin.auth();
 
-console.log("🔥 Firebase Firestore et Auth initialisés avec succès !");
+console.log("Firebase Firestore et Auth initialisés avec succès !");
 
-// 🔹 Exportation des modules
+
 module.exports = { db, admin, auth };

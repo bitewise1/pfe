@@ -5,21 +5,23 @@ import { Button, Divider} from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons'; 
+
 export default function UserType() {
 const navigation = useNavigation();
 const [userType, setUserType] = useState ('');
-const handleText = () =>{
-  console.log('User Type:', userType); 
-    if (userType === 'Personal'){
-       navigation.navigate('SignUp', {userType: userType});}
-    
-    else if (userType === 'Professional'){
-        navigation.navigate('NameScreen', {userType: userType});}
-    else {
-        Alert.alert('Please select an option first');
-    }
-
-}
+const handleText = () => {
+  console.log('User Type:', userType);
+  
+  if (userType === 'Personal') {
+    navigation.navigate('SignUp', { userType }); 
+  } 
+  else if (userType === 'Professional') {
+    navigation.navigate('NameScreen', { userType }); 
+  } 
+  else {
+    Alert.alert('Please select an option first');
+  }
+};
   return (
     <View style={styles.container}>
       <View>
