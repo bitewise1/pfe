@@ -31,7 +31,7 @@ export default function LogIn() {
 
       console.log("Sending token to backend:", idToken);  // Debugging log
 
-      const response = await fetch('http://192.168.1.14:3000/auth/login', {
+      const response = await fetch('http://192.168.145.232:3000/auth/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

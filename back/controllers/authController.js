@@ -56,19 +56,31 @@ const socialAuth = async (req, res) => {
         const { idToken } = req.body;
         if (!idToken) return res.status(400).json({ error: "Token requis" });
 
+        // Verify the Google/Facebook ID Token
         const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const userRef = db.collection("users").doc(decodedToken.uid);
+        const uid = decodedToken.uid;
+        const email = decodedToken.email;
+
+        // Check if user exists in Firestore
+        const userRef = db.collection("users").doc(uid);
         const docSnapshot = await userRef.get();
 
         if (!docSnapshot.exists) {
-            await userRef.set({ uid: decodedToken.uid, createdAt: admin.firestore.FieldValue.serverTimestamp() });
+            // Create new user if they don't exist
+            await userRef.set({
+                uid,
+                email,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
         }
 
-        res.status(200).json({ message: "Connexion réussie", uid: decodedToken.uid });
+        res.status(200).json({ message: "Connexion réussie", uid });
     } catch (error) {
+        console.error("Firebase Auth Error:", error);
         res.status(401).json({ error: "Erreur d'authentification" });
     }
 };
+
 
 const resetPassword = async (req, res) => {
     try {

@@ -18,7 +18,7 @@ export default function NameScreen() {
       return;
     }
 
-    const API_URL = "http://192.168.1.14:3000/user/updateProfile"; 
+    const API_URL = "http://192.168.145.232:3000/user/updateProfile"; 
 
     const requestBody = {
       uid, // Send actual user ID
@@ -26,7 +26,6 @@ export default function NameScreen() {
       lastName: lastName.trim(),
       userType
     };
-
     try {
       const response = await fetch(API_URL, {
         method: "POST",
@@ -39,9 +38,9 @@ export default function NameScreen() {
       if (response.ok) {
         console.log("Profile Updated:", data);
         if (userType === "Personal") {
-          navigation.navigate("goalScreen", { userName: name.trim() });
+          navigation.navigate("goalScreen", { userName: name.trim(), uid }); 
         } else if (userType === "Professional") {
-          navigation.navigate("NutritionForm", { userName: name.trim() });
+          navigation.navigate("NutritionForm", { userName: name.trim(), uid }); 
         }
       } else {
         Alert.alert("Error", data.error || "Failed to update profile");

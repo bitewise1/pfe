@@ -2,10 +2,13 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import styles from './Styles';
 import {Button} from 'react-native-paper'; 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 export default function MotivationalScreen() {
-    const navigation = useNavigation();
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { uid } = route.params || {}; 
+
   return (
     <View style= {styles.container}>
       <View>
@@ -19,7 +22,7 @@ export default function MotivationalScreen() {
       <Image source={require('../assets/Images/cuteApple.png')} style= {styles.cuteApple}/>
       <Text style = {[styles.secondaryText, styles.greenText]}>" Every choice you make brings you closer to your goal. Keep pushing!"</Text>
       <View style={styles.buttonContainer}>
-          <Button mode= 'contained' style={styles.button} labelStyle={styles.textButton} onPress = {()=> navigation.navigate('TransformationScreen')}>Next</Button>
+          <Button mode= 'contained' style={styles.button} labelStyle={styles.textButton} onPress = {()=> navigation.navigate('TransformationScreen',{uid})}>Next</Button>
       </View>
 
     </View>

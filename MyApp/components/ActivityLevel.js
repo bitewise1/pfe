@@ -3,20 +3,52 @@ import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 import styles from './Styles';
 import { useState} from 'react';
 import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 export default function ActivityLevel() {
-const navigation = useNavigation();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { uid } = route.params || {};  
+
   const [selected, setSelected] = useState(null);
-  const handleOptions = (option) =>{
+
+  const handleOptions = (option) => {
     setSelected(option);
-  } 
-  const handleSelect = () =>{
-   if (selected){
-    navigation.navigate('Gratitude');
-   }
-   
-  }
+  };
+
+  const handleSelect = async () => {
+    if (!selected) {
+      Alert.alert("Please select an activity level!");
+      return;
+    }
+
+    const API_URL = "http://192.168.145.232:3000/user/updateActivityLevel";
+
+    const requestBody = {
+      uid,
+      activityLevel: selected,
+    };
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Activity Level Updated:", data);
+        navigation.navigate("Gratitude", { uid });
+      } else {
+        Alert.alert("Error", data.error || "Failed to update activity level");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      Alert.alert("Error", "Something went wrong. Please try again.");
+    }
+  };
   return (
     <View style= {styles.container}>
       <View>

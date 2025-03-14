@@ -7,20 +7,39 @@ import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 export default function goalScreen() {
   const route = useRoute();
-  const { userName } = route.params || {userName: ''};
+  const { userName, uid } = route.params || {userName: ''};
   const navigation = useNavigation();
   const [selected, setSelected] = useState(null);
   const handleOptions = (option) =>{
     setSelected(option);
   } 
-  const handleSelect = () =>{
-   if (selected){
-    navigation.navigate('SettingProfile', { goal: selected });
-   }
-   else{
-    Alert.alert('Please select an option !')
-   }
-  } 
+  const handleSelect = async () =>{
+  const API_URL = "http://192.168.145.232:3000/user/updateGoal";
+  const requestBody = {
+    uid,
+    goal: selected,
+  };
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Goal Updated:", data);
+      navigation.navigate("SettingProfile", { goal: selected, uid });
+
+    } else {
+      Alert.alert("Error", data.error || "Failed to update goal");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    Alert.alert("Error", "Something went wrong. Please try again.");
+  }
+};
   return (
     <View style={styles.container}>
       <View>
