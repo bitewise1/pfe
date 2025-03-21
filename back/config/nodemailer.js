@@ -1,14 +1,13 @@
-// Envoi d'emails
-const nodemailer = require('nodemailer'); 
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-// Configuration de Nodemailer(transporteur pour l'envoi des e-mails)
+// ✅ Correct environment variable names
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.Email_user,
-        pass: process.env.Email_pass,
-    },
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // 🔥 FIXED: Must match `.env` variable
+    pass: process.env.EMAIL_PASS, // 🔥 FIXED: Must match `.env` variable
+  },
 });
 
 module.exports = transporter;

@@ -5,7 +5,7 @@ import {useState} from 'react';
 import { Button } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { auth } from '../firebaseConfig'; 
 export default function SettingProfile() {
   const route = useRoute();
   const {uid} = route.params;
@@ -26,7 +26,7 @@ export default function SettingProfile() {
 const numbers = Array.from({ length: Math.round((max - min) / step) + 1 }, (_, i) => (min + i * step).toFixed(1)); 
 const itemWidth = 25;
 const handleNext = async () => {
-  const API_URL = "http://192.168.145.232:3000/user/updateProfileDetails"; 
+  const API_URL = "http://10.0.2.2:3000/user/updateProfileDetails"; 
 
   const requestBody = {
     uid,
@@ -39,9 +39,10 @@ const handleNext = async () => {
   };
 
   try {
+    const idToken = await auth.currentUser.getIdToken(true);
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
       body: JSON.stringify(requestBody),
     });
 

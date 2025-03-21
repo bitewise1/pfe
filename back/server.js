@@ -1,37 +1,45 @@
 // Importation des modules nécessaires
-const express = require('express'); // Framework pour créer le serveur
-const app = express(); // Initialisation de l'application Express
-const cors = require('cors'); // Gérer les requêtes cross-origin
-const { admin, db } = require("./config/firebase"); // Importation de Firebase
-const authRoutes = require("./Routes/authRoutes"); // Correction du chemin
-const userRoutes = require("./Routes/userRoutes"); //  Ajout des routes utilisateur
+require("dotenv").config(); // Charger les variables d'environnement en premier
+const express = require("express");
+const cors = require("cors");
+const firebase = require("./config/firebase"); // Firebase Config
+const admin = firebase.admin;
+const db = firebase.db;
 
-// Charger les variables d'environnement depuis .env
-require('dotenv').config(); 
+const authRoutes = require("./Routes/authRoutes");
+const userRoutes = require("./Routes/userRoutes");
 
-// Middleware pour parser le corps de la requête
+const app = express();
+
+// Vérification de la connexion Firebase
+if (!admin.apps.length) {
+  console.error("Firebase Admin SDK non initialisé !");
+  process.exit(1);
+} else {
+  console.log("Firebase Admin SDK chargé avec succès !");
+}
+
+// Middleware
 app.use(express.json());
-
-// Activer CORS (pour permettre les requêtes de n'importe quelle origine)
-app.use(cors()); 
+app.use(cors());
 
 // Route de bienvenue
-app.get('/', (req, res) => {
-    res.send('Bienvenue sur BiteWise!');
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur BiteWise!");
 });
 
-// Utilisation des routes d'authentification et utilisateur
+// API Routes
 app.use("/auth", authRoutes);
-app.use("/user", userRoutes); 
+app.use("/user", userRoutes);
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ error: "Une erreur est survenue sur le serveur" });
+  console.error("Erreur Serveur :", err.stack);
+  res.status(500).json({ error: "Une erreur est survenue sur le serveur." });
 });
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Serveur démarré sur le port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });

@@ -14,8 +14,8 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { FacebookAuthProvider } from "firebase/auth";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
-
-export default function SignUp() {
+import API from '../config'
+export default function SignUp() {  
     const route = useRoute();
     const userType = route.params?.userType || 'Unknown';  
     console.log("UserType received in SignUp:", userType); 
@@ -63,7 +63,7 @@ export default function SignUp() {
           return;
       }
       if (await checkEmailExists(email)) {
-        Alert.alert("Erreur", "Email déjà utilisé");
+        Alert.alert("Error", "Email already used");
         return;
       }
       try {
@@ -72,7 +72,7 @@ export default function SignUp() {
       
           console.log("User created in Firebase Auth:", userId);
       
-          // Correct Firestore Reference
+          // user creation in firestore 
           const userRef = doc(db, "users", userId); 
           await setDoc(userRef, { 
             email,
@@ -93,65 +93,78 @@ export default function SignUp() {
   
     //google sign up
     const [request, response, promptAsync] = Google.useAuthRequest({
-        webClientId: '770007658347-fk52e7fhtq0bmep921sajvlosvh5kgep.apps.googleusercontent.com',
-        iosClientId: '1017733460133-v0vo1cluujf0nc6lk5nl20oe8h8m4v86.apps.googleusercontent.com',
-        androidClientId: '1017733460133-epv1rf173vhrnbnluc0sruffedra97bt.apps.googleusercontent.com'
-    });
-    useEffect(() => {
+      webClientId: '770007658347-fk52e7fhtq0bmep921sajvlosvh5kgep.apps.googleusercontent.com',
+      iosClientId: '770007658347-g34junm3haq9ng0i2m6ja4k1bcbcqisv.apps.googleusercontent.com',
+      androidClientId: '770007658347-kakh3u6u63873b8bcbav9h6b3jmefr8u.apps.googleusercontent.com'
+  });
+  
+  useEffect(() => {
       if (response?.type === 'success' && response.authentication) {
-        const { idToken } = response.authentication;
-        const credential = GoogleAuthProvider.credential(idToken);
-    
-        signInWithCredential(auth, credential)
-          .then(async (userCredential) => {
-            console.log("Google Sign Up Success:", userCredential.user.uid);
-            const uid = userCredential.user.uid; 
-    
-            await setDoc(doc(db, "users", uid), {
-              email: userCredential.user.email,
-              uid: uid,
-              createdAt: new Date(),
-            });
-    
-            navigation.navigate('NameScreen', { userType, uid }); 
-    
-          })
-          .catch(error => console.error("Google SignUp Error:", error));
+          const { idToken } = response.authentication;  // Get ID token
+          const credential = GoogleAuthProvider.credential(idToken);
+          
+          signInWithCredential(auth, credential)
+              .then(async (userCredential) => {
+                  console.log("Google Sign Up Success:", userCredential.user.uid);
+                  const uid = userCredential.user.uid;
+  
+                  // Send ID Token to Backend
+                  const backendResponse = await fetch(API.SOCIAL_AUTH, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ idToken }),
+                  });
+  
+                  const data = await backendResponse.json();
+                  if (backendResponse.ok) {
+                      console.log("Backend Auth Success:", data);
+                      navigation.navigate('NameScreen', { uid });
+                  } else {
+                      Alert.alert("Error", data.error || "Google SignUp failed");
+                  }
+              })
+              .catch(error => console.error("Google SignUp Error:", error));
       }
-    }, [response]);
+  }, [response]);
+  
     
     //facebook sign up 
     const handleFacebookLogin = async () => {
       try {
-        const result = await Facebook.logInWithReadPermissionsAsync({
-          permissions: ['public_profile', 'email'],
-        });
-    
-        if (result.type === 'success') {
-          const credential = FacebookAuthProvider.credential(result.token);
-          const userCredential = await signInWithCredential(auth, credential);
-          console.log("Facebook Sign Up Success:", userCredential.user.uid);
-          const uid = userCredential.user.uid;
-          const idToken = result.token;  // Facebook token
-    
-          // Save user in Firestore
-          await setDoc(doc(db, "users", uid), {
-            email: userCredential.user.email,
-            uid: uid,
-            createdAt: new Date(),
+          await Facebook.initializeAsync(); // Ensure Facebook SDK is ready
+          const result = await Facebook.logInWithReadPermissionsAsync({
+              permissions: ['public_profile', 'email'],
           });
-    
-          // Authenticate with backend
-          await authenticateWithBackend(idToken, uid);
-    
-        } else {
-          console.log("Facebook Login Cancelled");
-        }
+  
+          if (result.type === 'success') {
+              const credential = FacebookAuthProvider.credential(result.token);
+              const userCredential = await signInWithCredential(auth, credential);
+              console.log("Facebook Sign Up Success:", userCredential.user.uid);
+              const idToken = result.token; // Facebook token
+  
+              // Send ID Token to Backend
+              const backendResponse = await fetch(API.SOCIAL_AUTH, {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ idToken }),
+              });
+  
+              const data = await backendResponse.json();
+              if (backendResponse.ok) {
+                  console.log("Backend Auth Success:", data);
+                  navigation.navigate('NameScreen', { uid: data.uid });
+              } else {
+                  Alert.alert("Error", data.error || "Facebook SignUp failed");
+              }
+          } else {
+              console.log("Facebook Login Cancelled");
+          }
       } catch (error) {
-        console.error("Facebook Login Error:", error);
-        Alert.alert("Facebook Login Error", error.message);
+          console.error("Facebook Login Error:", error);
+          Alert.alert("Facebook Login Error", error.message);
       }
-    };
+  };
+  
   return (
     <View style= {styles.container}>
       <View>

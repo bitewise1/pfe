@@ -597,6 +597,8 @@ Divider: {
   borderRadius: pxToDp(20),
   justifyContent: 'center',
   marginVertical: pxToDp(20),
+  paddingVertical: pxToDp(20),
+  paddingHorizontal: pxToDp(8),
   width: '95%',
  },
  caloriesText:{
@@ -739,6 +741,43 @@ googleButton: {
     justifyContent: 'center',
     gap: pxToDp(30),
    
+  }, 
+  //home screen 
+  remainingValue:{
+    fontFamily: 'Quicksand_700Bold',
+    marginBottom: pxToDp(10)
+  },
+  remaining:{
+    fontFamily: 'Quicksand_600SemiBold',
+    color: '#2E4A32'
+  },
+  chartText:{
+    color: 'white',
+    fontFamily: 'Quicksand_700Bold',
+    fontSize: pxToDp(15)
+  },
+  // add meal screen
+  addText:{
+    fontFamily: 'Quicksand_700Bold',
+    fontSize: pxToDp(20),
+    
+  },
+  //scanning button 
+  analyzeButton:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor:'#FCCF94',
+    borderRadius: 20,
+    paddingVertical: 8,
+    marginVertical: 25, 
+    paddingHorizontal: 8, 
+    width: '85%', 
+    height: 55,
+    elevation: 2, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
   }
 })
 export default styles;

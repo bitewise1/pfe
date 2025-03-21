@@ -5,6 +5,7 @@ import { useState} from 'react';
 import { Button } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebaseConfig'; 
 export default function DietaryPreferences() {
   const navigation = useNavigation();
   const route = useRoute();
@@ -41,13 +42,14 @@ export default function DietaryPreferences() {
       ? [...selectedOptions.filter(item => item !== "Other ✏️"), customDiet.trim()]
       : selectedOptions;
   
-    const API_URL = "http://192.168.145.232:3000/user/updateDietaryPreferences";
+    const API_URL = "http://10.0.2.2:3000/user/updateDietaryPreferences";
     const requestBody = { uid, dietaryPreferences: finalSelection };
   
     try {
+      const idToken = await auth.currentUser.getIdToken(true);
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
         body: JSON.stringify(requestBody),
       });
   

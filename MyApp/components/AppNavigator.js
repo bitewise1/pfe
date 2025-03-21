@@ -3,7 +3,7 @@ import NameScreen from './NameScreen';
 import LogIn from './LogIn';
 import ResetPassword from './ResetPassword';
 import UserType from './UserType';
-import goalScreen from './goalScreen';
+import GoalScreen from './goalScreen';
 import NutritionForm from './NutritionForm';
 import SettingProfile from './SettingProfile';
 import MotivationalScreen from './MotivationalScreen';
@@ -38,7 +38,7 @@ export default function AppNavigator(){
                 <Stack.Screen name='SignUp' component={SignUp}/>
                 <Stack.Screen name='NameScreen' component={NameScreen} />
                 <Stack.Screen name='ResetPassword' component={ResetPassword}/>
-                <Stack.Screen name='goalScreen' component={goalScreen}/>
+                <Stack.Screen name='GoalScreen' component={GoalScreen}/>
                 <Stack.Screen name= 'SettingProfile' component={SettingProfile}/>
                 <Stack.Screen name='NutritionForm' component={NutritionForm}/>
                 <Stack.Screen name='MotivationalScreen' component={MotivationalScreen}/>

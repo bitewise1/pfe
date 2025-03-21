@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import {useState} from 'react';
 import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { auth } from '../firebaseConfig'; 
 export default function NameScreen() {
   const route = useRoute ();
   const navigation = useNavigation();
@@ -17,9 +18,9 @@ export default function NameScreen() {
       Alert.alert('Error', 'Please enter both first and last names.');
       return;
     }
-
-    const API_URL = "http://192.168.145.232:3000/user/updateProfile"; 
-
+    const idToken = await auth.currentUser.getIdToken(true);
+    const API_URL = "http://10.0.2.2:3000/user/updateProfile"; 
+    
     const requestBody = {
       uid, // Send actual user ID
       firstName: name.trim(),
@@ -27,9 +28,11 @@ export default function NameScreen() {
       userType
     };
     try {
+      
       const response = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}`},
+        
         body: JSON.stringify(requestBody),
       });
 

@@ -54,19 +54,23 @@ const register = async (req, res) => {
 const socialAuth = async (req, res) => {
     try {
         const { idToken } = req.body;
-        if (!idToken) return res.status(400).json({ error: "Token requis" });
+        if (!idToken) return res.status(400).json({ error: "Token is required" });
 
-        // Verify the Google/Facebook ID Token
+        // ✅ Verify ID Token (Google or Facebook)
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const uid = decodedToken.uid;
         const email = decodedToken.email;
 
-        // Check if user exists in Firestore
+        if (!email) {
+            return res.status(400).json({ error: "Email not provided in token" });
+        }
+
+        // ✅ Check if user exists in Firestore
         const userRef = db.collection("users").doc(uid);
         const docSnapshot = await userRef.get();
 
         if (!docSnapshot.exists) {
-            // Create new user if they don't exist
+            // ✅ Create new user if not found
             await userRef.set({
                 uid,
                 email,
@@ -74,12 +78,13 @@ const socialAuth = async (req, res) => {
             });
         }
 
-        res.status(200).json({ message: "Connexion réussie", uid });
+        res.status(200).json({ message: "Login successful", uid, email });
     } catch (error) {
-        console.error("Firebase Auth Error:", error);
-        res.status(401).json({ error: "Erreur d'authentification" });
+        console.error("❌ Firebase Auth Error:", error);
+        res.status(401).json({ error: "Invalid or expired token" });
     }
 };
+
 
 
 const resetPassword = async (req, res) => {

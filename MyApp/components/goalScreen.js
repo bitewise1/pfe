@@ -5,7 +5,8 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {useState} from 'react';
 import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
-export default function goalScreen() {
+import { auth } from '../firebaseConfig'; 
+export default function GoalScreen() {
   const route = useRoute();
   const { userName, uid } = route.params || {userName: ''};
   const navigation = useNavigation();
@@ -14,15 +15,16 @@ export default function goalScreen() {
     setSelected(option);
   } 
   const handleSelect = async () =>{
-  const API_URL = "http://192.168.145.232:3000/user/updateGoal";
+  const API_URL = "http://10.0.2.2:3000/user/updateGoal";
   const requestBody = {
     uid,
     goal: selected,
   };
   try {
+    const idToken = await auth.currentUser.getIdToken(true);//refresh token
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
       body: JSON.stringify(requestBody),
     });
 

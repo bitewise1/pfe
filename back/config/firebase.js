@@ -1,28 +1,50 @@
+require("dotenv").config();
 const admin = require("firebase-admin");
+const fs = require("fs");
+const path = require("path");
 
-// Charger le fichier `serviceAccountKey.json`
-const serviceAccount = require("./bitewise-4d93e-firebase-adminsdk-fbsvc-b20ed2ebb5.json"); 
+// Get Firebase service account file path from .env
+const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
 
-// Initialisation de Firebase Admin SDK
+// Debugging: Print the path to confirm it's correct
+console.log("Checking Firebase JSON Path:", serviceAccountPath);
+
+// Check if the file exists
+if (!fs.existsSync(serviceAccountPath)) {
+  console.error("Firebase service account file is missing or incorrect:", serviceAccountPath);
+  process.exit(1); // Stop the server if the file is missing
+}
+
+// ✅ Load service account credentials
+let serviceAccount;
+try {
+  serviceAccount = require(serviceAccountPath); // Try to load service account credentials
+} catch (error) {
+  console.error("Failed to load the service account credentials file:", error);
+  process.exit(1);
+}
+
+// Initialize Firebase Admin SDK only if it is not initialized yet
 if (!admin.apps.length) {
   try {
-    console.log(" Initialisation de Firebase Admin SDK...");
+    console.log("Initializing Firebase Admin SDK...");
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`
+      databaseURL: process.env.FIREBASE_DATABASE_URL,  // Optional, only if you're using Firebase Realtime Database
     });
-    console.log("Firebase connecté au projet :", serviceAccount.project_id);
+    console.log("Firebase connected to project:", process.env.FIREBASE_PROJECT_ID);
   } catch (error) {
-    console.error("Erreur d'initialisation Firebase :", error);
-    process.exit(1); // Quitte l'application en cas d'erreur critique
+    console.error("Firebase Initialization Error:", error);
+    process.exit(1); // Stop the server if initialization fails
   }
 }
 
-// Initialisation de Firestore et Auth
+// Initialize Firestore and Auth
 const db = admin.firestore();
 const auth = admin.auth();
 
-console.log("Firebase Firestore et Auth initialisés avec succès !");
+console.log("Firebase Firestore and Auth initialized successfully!");
 
-
+// Export Firebase services for use in other files
 module.exports = { db, admin, auth };
+

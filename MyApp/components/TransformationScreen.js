@@ -5,6 +5,7 @@ import {Button} from 'react-native-paper';
 import styles from './Styles';
 import {useState} from 'react';
 import {Ionicons} from '@expo/vector-icons';
+import { auth } from '../firebaseConfig'; 
 const BottomPopup = ({visible}) =>{
   return (
     
@@ -46,7 +47,7 @@ export default function TransformationScreen() {
 
  
 
-  const API_URL = "http://192.168.145.232:3000/user/updateTransformation"; 
+  const API_URL = "http://10.0.2.2:3000/user/updateTransformation"; 
 
   const requestBody = {
     uid,
@@ -54,9 +55,10 @@ export default function TransformationScreen() {
   };
 
   try {
+    const idToken = await auth.currentUser.getIdToken(true);
     const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
       body: JSON.stringify(requestBody),
     });
 

@@ -8,7 +8,7 @@ import * as Facebook from 'expo-facebook';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from "../firebaseConfig";  
 import { signInWithEmailAndPassword } from "firebase/auth";
-
+import API from '../config'
 export default function LogIn() {
   const navigation = useNavigation(); 
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ export default function LogIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [serverError, setServerError] = useState('');
 
-  // Moved `isFormValid` inside the function
+
   const isFormValid = () => email.trim() !== '' && password.trim() !== '';
 
   const handleEmailPasswordLogin = async () => {
@@ -26,26 +26,26 @@ export default function LogIn() {
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password); //(usercredential : uid , email, user: contains getIdToken)
       const idToken = await userCredential.user.getIdToken(true);  // Always refresh token
 
-      console.log("Sending token to backend:", idToken);  // Debugging log
+      console.log("Sending token to backend:", idToken);  // verifying if the idtoken is sending o the back 
 
-      const response = await fetch('http://192.168.145.232:3000/auth/login', {
+      const response = await fetch('http://10.0.2.2:3000/auth/login', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`  // Send token in Authorization header
+          'Authorization': `Bearer ${idToken}`  //send token with the header 
         },
-        body: JSON.stringify({ idToken }) // Added missing body
+        body: JSON.stringify({ idToken }) // make token in a json string format 
       });
 
-      const data = await response.json();
+      const data = await response.json(); 
       console.log("Backend response:", data);
 
       if (response.ok) {
         console.log("Connexion réussie:", data);
-        navigation.navigate('Home');  // Navigate to Home only if login is successful
+        navigation.navigate('Home');  
       } else {
         setServerError(data.error || 'Erreur inconnue');
       }
@@ -55,18 +55,50 @@ export default function LogIn() {
     }
   };
 
-  // 🔹 Google Sign-In
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: '1017733460133-9vb26o17igm227eko3bur0ub6285bsg3.apps.googleusercontent.com',
-    iosClientId: '1017733460133-v0vo1cluujf0nc6lk5nl20oe8h8m4v86.apps.googleusercontent.com',
-    androidClientId: '1017733460133-epv1rf173vhrnbnluc0sruffedra97bt.apps.googleusercontent.com'
-  });
+  // Google Sign-In
+ const [request, response, promptAsync] = Google.useAuthRequest({
+         webClientId: '770007658347-fk52e7fhtq0bmep921sajvlosvh5kgep.apps.googleusercontent.com',
+         iosClientId: '770007658347-g34junm3haq9ng0i2m6ja4k1bcbcqisv.apps.googleusercontent.com',
+         androidClientId: '770007658347-kakh3u6u63873b8bcbav9h6b3jmefr8u.apps.googleusercontent.com'
+     });
 
-  useEffect(() => {
-    if (response?.type === 'success') {
-      console.log('Google Auth Success, token:', response.authentication.accessToken);
-    }
-  }, [response]);
+  // Inside the useEffect for Google Auth
+useEffect(() => {
+  if (response?.type === 'success') {
+    console.log('Google Auth Success, token:', response.authentication.accessToken);
+
+    // Send the Google token to the backend
+    const sendGoogleTokenToBackend = async () => {
+      try {
+        const idToken = response.authentication.accessToken;  // Get the Google Access Token
+
+        const backendResponse = await fetch('http://10.0.2.2:3000/auth/socialAuth', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            idToken, // Send the Google token to your backend
+          }),
+        });
+
+        const data = await backendResponse.json();
+        if (backendResponse.ok) {
+          console.log("Google login successful:", data);
+          // Handle success, e.g., navigate to home page
+          navigation.navigate('Home');
+        } else {
+          console.log("Error:", data.error);
+        }
+      } catch (error) {
+        console.log("Error sending token to backend:", error);
+      }
+    };
+
+    sendGoogleTokenToBackend();  // Call the function
+  }
+}, [response]);
+
 
   // 🔹 Facebook Sign-In
   useEffect(() => {
@@ -80,9 +112,37 @@ export default function LogIn() {
       const result = await Facebook.logInWithReadPermissionsAsync({
         permissions: ['public_profile', 'email'],
       });
-
+  
       if (result.type === 'success') {
         console.log('Facebook token:', result.token);
+  
+        // Send the Facebook token to the backend
+        const sendFacebookTokenToBackend = async () => {
+          try {
+            const backendResponse = await fetch('http://10.0.2.2:3000/auth/socialAuth', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                idToken: result.token, // Send the Facebook token to your backend
+              }),
+            });
+  
+            const data = await backendResponse.json();
+            if (backendResponse.ok) {
+              console.log("Facebook login successful:", data);
+              // Handle success, e.g., navigate to home page
+              navigation.navigate('Home');
+            } else {
+              console.log("Error:", data.error);
+            }
+          } catch (error) {
+            console.log("Error sending token to backend:", error);
+          }
+        };
+  
+        sendFacebookTokenToBackend();  // Call the function
       } else {
         console.log('Facebook login cancelled');
       }
