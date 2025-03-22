@@ -34,3 +34,5 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+# Ignore Firebase service account credentials
+back/config/bitewise-4d93e-firebase-adminsdk-*.json
