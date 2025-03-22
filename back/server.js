@@ -8,7 +8,7 @@ const db = firebase.db;
 
 const authRoutes = require("./Routes/authRoutes");
 const userRoutes = require("./Routes/userRoutes");
-
+const expertRoutes = require("./Routes/expertRoutes")
 const app = express();
 
 // Vérification de la connexion Firebase
