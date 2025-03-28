@@ -56,7 +56,7 @@ const socialAuth = async (req, res) => {
         const { idToken } = req.body;
         if (!idToken) return res.status(400).json({ error: "Token is required" });
 
-        // ✅ Verify ID Token (Google or Facebook)
+        // Verify ID Token (Google or Facebook)
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const uid = decodedToken.uid;
         const email = decodedToken.email;
@@ -65,12 +65,12 @@ const socialAuth = async (req, res) => {
             return res.status(400).json({ error: "Email not provided in token" });
         }
 
-        // ✅ Check if user exists in Firestore
+        // Check if user exists in Firestore
         const userRef = db.collection("users").doc(uid);
         const docSnapshot = await userRef.get();
 
         if (!docSnapshot.exists) {
-            // ✅ Create new user if not found
+            // Create new user if not found
             await userRef.set({
                 uid,
                 email,
@@ -80,31 +80,11 @@ const socialAuth = async (req, res) => {
 
         res.status(200).json({ message: "Login successful", uid, email });
     } catch (error) {
-        console.error("❌ Firebase Auth Error:", error);
+        console.error("Firebase Auth Error:", error);
         res.status(401).json({ error: "Invalid or expired token" });
     }
 };
 
 
 
-const resetPassword = async (req, res) => {
-    try {
-        const { email } = req.body;
-        if (!email) return res.status(400).json({ error: "L'email est requis" });
-
-        const resetLink = await admin.auth().generatePasswordResetLink(email);
-
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "Réinitialisation de votre mot de passe",
-            text: `Cliquez ici pour réinitialiser votre mot de passe : ${resetLink}`,
-        });
-
-        res.json({ message: "E-mail de réinitialisation envoyé" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-module.exports = { login, register, socialAuth, resetPassword };
+module.exports = { login, register, socialAuth };

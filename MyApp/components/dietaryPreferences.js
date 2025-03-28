@@ -69,11 +69,11 @@ export default function DietaryPreferences() {
 
   return (
     <View style= {styles.container}>
-      <View>
+ 
       <TouchableOpacity onPress={() => navigation.goBack() } style={[styles.backButton, {marginTop: 50}]}>
         <Ionicons name="arrow-back" size={38}/>
       </TouchableOpacity>
-     </View>
+   
       <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={styles.dietaryText}>Do you have any dietary prefernces or resrictions ? </Text>

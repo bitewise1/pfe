@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from 'react-nativ
 import Header from './Header';
 import TabNavigation from './TabNavigation';
 import styles from './Styles';
+import Card from './Card';
 import { Ionicons } from '@expo/vector-icons';
-
 export default function Recipes() {
   return (
     <View style={styles.mainContainer}>
@@ -18,6 +18,10 @@ Dive Into Yummy Recipes `}/>
         </TouchableOpacity>
         <ScrollView showsVerticalScrollIndicator={false} style={{width: '100%', marginVertical: 10}}>
              <Text style={[styles.caloriesText, {padding: 10}]}>Popular Dishes</Text>
+          <TouchableOpacity>
+            <Card/>
+          </TouchableOpacity>
+            
         </ScrollView>
       
     </View>

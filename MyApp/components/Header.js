@@ -5,11 +5,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
  
-export default function Header({subtitle}) {
+export default function Header({subtitle, style}) {
     const navigation = useNavigation();
     return (
    
-    <View style={styles.header}>
+    <View style={[styles.header, style]}>
         <View style={styles.topRow}>
         <Image
             source={require("../assets/Images/logo.png") } style={styles.headerLogo}

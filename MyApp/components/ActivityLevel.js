@@ -53,11 +53,11 @@ export default function ActivityLevel() {
   };
   return (
     <View style= {styles.container}>
-      <View>
+    
       <TouchableOpacity onPress={() => navigation.goBack() } style={styles.backButton}>
         <Ionicons name="arrow-back" size={38}/>
       </TouchableOpacity>
-     </View>
+     
       <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={styles.dietaryText}>How active are you in  your daily life ? </Text>

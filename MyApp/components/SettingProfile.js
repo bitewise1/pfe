@@ -64,11 +64,11 @@ const handleNext = async () => {
     <View style={styles.container}>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
-      <View>
+      
       <TouchableOpacity onPress={() => navigation.goBack() } style={[styles.backButton, {marginTop: 45}]}>
         <Ionicons name="arrow-back" size={38}/>
       </TouchableOpacity>
-     </View>
+     
       <ScrollView showsVerticalScrollIndicator={false} style={{width: '100%', marginVertical: 55}}>
       <Text style={[styles.primaryText, {marginVertical: 10}]}>Let's set up your profile</Text>
       <Text style={[styles.caloriesText, {padding: 10}]}>What is your gender?</Text>

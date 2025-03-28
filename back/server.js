@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 // API Routes
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
-
+app.use("/expert", expertRoutes);
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error("Erreur Serveur :", err.stack);

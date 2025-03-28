@@ -22,6 +22,17 @@ import NutritionSection from './NutritionSection';
 import NutritionPlan from './NutritionPlan';
 import AddMeal from './AddMeal'
 import ActivityScreen from './ActivityScreen';
+import NutritionistInfo from './NutritionistInfo';
+import MessagesGuidance from './MessagesGuidance';
+import ProfessionalChat from './ProfessionalChat';
+import ProfileInfoSettings from './ProfileInfoSettings';
+import GoalInfoSettings from './GoalsInfoSettings';
+import DieataryInfoSettings from './DieataryInfoSettings';
+import ActivtyInfoSettings from './ActivtyInfoSettings';
+import AccountSettings from './AccountSettings';
+import RemindersSettings from './RemindersSettings';
+import LogOutSettings from './LogOutSettings';
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -56,6 +67,17 @@ export default function AppNavigator(){
                 <Stack.Screen name='NutritionPlan' component={NutritionPlan}/>
                 <Stack.Screen name ='AddMeal' component={AddMeal}/>
                 <Stack.Screen name ='ActivityScreen' component={ActivityScreen}/>
+                <Stack.Screen name = 'NutritionistInfo' component={NutritionistInfo}/>
+                <Stack.Screen name = 'MessagesGuidance' component={MessagesGuidance}/>
+                <Stack.Screen name = 'ProfessionalChat' component={ProfessionalChat}/> 
+                <Stack.Screen name = 'ProfileInfoSettings' component={ProfileInfoSettings} />
+                <Stack.Screen name = 'GoalInfoSettings' component={GoalInfoSettings}/>
+                <Stack.Screen name = 'DieataryInfoSettings' component={DieataryInfoSettings} />
+                <Stack.Screen name = 'ActivtyInfoSettings' component={ActivtyInfoSettings} />
+                <Stack.Screen name = 'AccountSettings' component={AccountSettings} />
+                <Stack.Screen name = 'RemindersSettings' component={RemindersSettings}/>
+                <Stack.Screen name = 'LogOutSettings' component={LogOutSettings}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     );

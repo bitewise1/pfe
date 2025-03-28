@@ -14,53 +14,59 @@ export default function NameScreen() {
   const [lastName, setLastName] = useState('');
   const { userType, uid } = route.params;
   const handleNext = async () => {
-    if (!name.trim() || !lastName.trim()) {
-      Alert.alert('Error', 'Please enter both first and last names.');
-      return;
-    }
-    const idToken = await auth.currentUser.getIdToken(true);
-    const API_URL = "http://10.0.2.2:3000/user/updateProfile"; 
-    
-    const requestBody = {
-      uid, // Send actual user ID
-      firstName: name.trim(),
-      lastName: lastName.trim(),
-      userType
-    };
-    try {
-      
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}`},
-        
-        body: JSON.stringify(requestBody),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Profile Updated:", data);
-        if (userType === "Personal") {
-          navigation.navigate("goalScreen", { userName: name.trim(), uid }); 
-        } else if (userType === "Professional") {
-          navigation.navigate("NutritionForm", { userName: name.trim(), uid }); 
-        }
-      } else {
-        Alert.alert("Error", data.error || "Failed to update profile");
+      if (!name.trim() || !lastName.trim()) {
+        Alert.alert('Error', 'Please enter both first and last names.');
+        return;
       }
-    } catch (error) {
-      console.error("Error:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
-    }
-  };
+    
+      if (userType === "Professional") {
+        navigation.navigate("NutritionForm", { 
+          userName: name.trim(), 
+          lastName: lastName.trim(), 
+          userType 
+        });
+        return;
+      }
+    
+      try {
+        const idToken = await auth.currentUser.getIdToken(true);
+        const API_URL = "http://10.0.2.2:3000/user/updateProfile"; 
+        
+        const requestBody = {
+          uid, 
+          firstName: name.trim(),
+          lastName: lastName.trim(),
+          userType
+        };
+    
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
+          body: JSON.stringify(requestBody),
+        });
+    
+        const data = await response.json();
+    
+        if (response.ok) {
+          console.log("Profile Updated:", data);
+          navigation.navigate("GoalScreen", { userName: name.trim(), uid }); 
+        } else {
+          Alert.alert("Error", data.error || "Failed to update profile");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        Alert.alert("Error", "Something went wrong. Please try again.");
+      }
+    };
+    
 
   return (
     <View style={styles.container}>
-      <View>
+     
          <TouchableOpacity onPress={() => navigation.goBack() } style={styles.backButton}>
            <Ionicons name="arrow-back" size={38}/>
          </TouchableOpacity>
-      </View>
+      
       <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={styles.primaryText}>Welcome to {'\n'}BiteWise</Text>

@@ -167,11 +167,11 @@ export default function SignUp() {
   
   return (
     <View style= {styles.container}>
-      <View>
+      
          <TouchableOpacity onPress={() => navigation.goBack() } style={[styles.backButton, {paddingTop: 5}]}>
            <Ionicons name="arrow-back" size={38}/>
          </TouchableOpacity>
-      </View>
+     
       <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={styles.SignUpText} >Your journey starts here {'\n'} Take the first step</Text>

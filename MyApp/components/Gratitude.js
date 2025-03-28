@@ -8,11 +8,11 @@ export default function Gratitude() {
     const navigation = useNavigation();
   return (
     <View style= {styles.container} backgroundColor= '#FCCF94'>
-        <View>
+      
          <TouchableOpacity onPress={() => navigation.goBack() } style={[styles.backButton, {marginTop: 5}]} >
              <Ionicons name="arrow-back" size={38}/>
          </TouchableOpacity>
-        </View>
+      
         <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
         <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={styles.transformationText}>We're grateful to have you on board!</Text>

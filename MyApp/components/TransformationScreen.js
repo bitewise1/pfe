@@ -87,11 +87,11 @@ export default function TransformationScreen() {
     
   return (
     <View style = {styles.container}>
-      <View>
+    
          <TouchableOpacity onPress={() => navigation.goBack() } style={styles.backButton}>
            <Ionicons name="arrow-back" size={38}/>
          </TouchableOpacity>
-     </View>
+ 
        <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
        <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
       <Text style={ styles.transformationText}>What's driving your transformation?</Text>

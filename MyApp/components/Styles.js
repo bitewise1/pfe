@@ -15,8 +15,8 @@ container: {
 // arrow back
 backButton:{
  position: 'absolute',
- left: pxToDp(-180),
-marginBottom: pxToDp(20),
+ top: 70,
+ left: 20,
 zIndex: 100,
 },
 // general text
@@ -120,7 +120,7 @@ button: {
   shadowColor: '#000',
   shadowOpacity: 0.2,
   shadowRadius: pxToDp(10),
-  elevation: 10,
+  elevation: 5,
   shadowOffset: { width: 0, height: pxToDp(2) },
   overflow: 'hidden'
 },
@@ -149,7 +149,7 @@ orangeContainer: {
 },
 // Divider
 Divider: {
-        width: '80%',
+        width: '90%',
         height: pxToDp(1),
         backgroundColor: '#000',
         alignSelf: 'center',
@@ -778,6 +778,179 @@ googleButton: {
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
-  }
+  },
+  // reset screen
+  subNameText:{
+    color:'#4F7B4A',
+    textAlign: 'center',
+    fontFamily: 'Quicksand_700Bold',
+    fontSize: pxToDp(15),
+    marginVertical: pxToDp(15),
+    
+  
+    },
+    resetText:{
+      color: '#000',
+      textAlign: 'center', 
+      fontFamily: 'Quicksand_700Bold',
+      fontSize: pxToDp(30),
+      marginVertical: pxToDp(20),
+    },
+    //card
+    cardContainer:{
+      flex: 1,
+      alignItems: 'left',
+      backgroundColor: '#FCCF94',
+      borderRadius: pxToDp(20),
+      width: '90%',
+      height: pxToDp(270),
+      marginVertical: pxToDp(10),
+      shadowColor: '#000',
+      shadowOpacity: 0.2,
+      shadowRadius: pxToDp(10),
+      elevation: 5,
+      shadowOffset: { width: 0, height: pxToDp(2) },
+      marginHorizontal: pxToDp(20),
+    }, 
+    cardImage:{
+      width: '100%',
+      height: '70%',
+      resizeMode: 'cover',
+      borderTopLeftRadius: pxToDp(20),
+      borderTopRightRadius: pxToDp(20),
+    },
+    cardTitle:{
+      color: '#000',
+      textAlign: 'center', 
+      fontFamily: 'Quicksand_700Bold',
+      fontSize: pxToDp(20),
+      paddingLeft: pxToDp(10),
+      marginVertical: pxToDp(10)
+    },
+    cardDescription:{
+      color: '#000',
+      textAlign: 'center', 
+      fontFamily: 'Quicksand_500Medium',
+      fontSize: pxToDp(15),
+      paddingLeft: pxToDp(10),
+      marginVertical: pxToDp(10)
+    },
+    cardCalories:{
+      color: '#000',
+      textAlign: 'center', 
+      fontFamily: 'Quicksand_500Medium',
+      fontSize: pxToDp(15),
+      paddingLeft: pxToDp(10),
+    },
+    arrowRecipes:{
+      position: 'absolute',
+      bottom: 10,
+      right: 10,
+    },
+    cardRating:{
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      paddingLeft: pxToDp(10),
+      marginVertical: pxToDp(10),
+      alignSelf: "center"
+    },
+  //nutritionist card 
+cardNutritionistContainer:{
+  flex: 1,
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  backgroundColor: '#FCCF94',
+  borderRadius: pxToDp(20),
+  width: '90%',
+  height: pxToDp(170),
+  marginVertical: pxToDp(10),
+  shadowColor: '#000',
+  shadowOpacity: 0.2,
+  shadowRadius: pxToDp(10),
+  elevation: 5,
+  shadowOffset: { width: 0, height: pxToDp(2) },
+  marginHorizontal: pxToDp(20),
+  paddingHorizontal: pxToDp(10),
+},
+cardNutritionistImage:{
+  width: 150, 
+  height: 150,
+  borderRadius: 75,
+  resizeMode: 'cover',
+
+},
+specializationText:{
+    color: '#2E4A32',
+    textAlign: 'center', 
+    fontFamily: 'Quicksand_500Medium',
+    fontSize: pxToDp(15),
+    paddingLeft: pxToDp(10),
+  },
+// Nutrition info screen 
+nutritionistName:{
+  fontFamily: 'Quicksand_700Bold',
+  fontSize: pxToDp(20),
+  marginBottom: pxToDp(10),
+
+},
+nutritionistSpecialization:{
+  fontFamily: 'Quicksand_500Medium',
+  fontSize: pxToDp(16),
+  marginBottom: pxToDp(10),
+},
+nutritionistWorkplace:{
+  fontFamily: 'Quicksand_500Medium',
+  fontSize: pxToDp(16),
+  marginBottom: pxToDp(10),
+}, 
+littleOrange:{
+   width: 50,
+   height: 50, 
+   alignSelf: 'center'
+}, 
+//message and guidance 
+buttons:{
+  backgroundColor:'#FCCF94',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: 20,
+  paddingVertical: 8,
+  marginVertical: 13, 
+  paddingHorizontal: 8, 
+  width: '85%', 
+  height: 55,
+  elevation: 2, 
+  shadowColor: '#000', 
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 2,
+},
+messageContainer:{
+  alignItems: 'center'
+},
+RatingEntry:{
+  textAlign: 'left',
+  fontFamily: 'Quicksand_600SemiBold',
+  fontSize: pxToDp(20),
+  paddingLeft: pxToDp(30),
+  marginVertical: pxToDp(10)
+},
+settingsButton:{
+  width: '90%',
+  height: pxToDp(50),
+  borderRadius: pxToDp(20),
+  backgroundColor: '#FCCF94',
+  alignItems: 'center',
+  justifyContent: 'center',
+  alignSelf: 'center',
+  shadowColor: '#000',
+  shadowOpacity: 0.2,
+  shadowRadius: pxToDp(10),
+  elevation: 5,
+  shadowOffset: { width: 0, height: pxToDp(2) },
+  marginVertical: pxToDp(10)
+},
+
 })
 export default styles;
