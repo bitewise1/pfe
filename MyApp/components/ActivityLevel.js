@@ -6,10 +6,13 @@ import { Button } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig'; 
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 export default function ActivityLevel() {
   const navigation = useNavigation();
   const route = useRoute();
-  const { uid } = route.params || {};  
+  const { user } = useContext(AuthContext);
+      const uid = user?.uid;
 
   const [selected, setSelected] = useState(null);
 
@@ -42,7 +45,7 @@ export default function ActivityLevel() {
 
       if (response.ok) {
         console.log("Activity Level Updated:", data);
-        navigation.navigate("Gratitude", { uid });
+        navigation.navigate("EstimationScreen", { uid });
       } else {
         Alert.alert("Error", data.error || "Failed to update activity level");
       }

@@ -5,7 +5,11 @@ import TabNavigation from './TabNavigation';
 import styles from './Styles';
 import {useState} from 'react';
 import { Picker } from '@react-native-picker/picker';
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 export default function ActivityScreen() {
+  const { user } = useContext(AuthContext);
+    const uid = user?.uid;
   const [selectedValue, setSelectedValue] = useState('List');
   const [timeValue, setTimeValue]= useState('');
   const [unitValue, setUnitValue] = useState('Minute')

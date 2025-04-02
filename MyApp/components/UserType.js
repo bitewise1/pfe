@@ -2,11 +2,15 @@ import React from 'react';
 import { View, Text, Image, Alert, TouchableOpacity } from 'react-native';
 import styles from './Styles';
 import { Button, Divider} from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons'; 
-
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 export default function UserType() {
+  const { user } = useContext(AuthContext);
+  const uid = user?.uid;
+  
 const navigation = useNavigation();
 const [userType, setUserType] = useState ('');
 const handleText = () => {

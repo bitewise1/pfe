@@ -2,17 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import styles, { pxToDp } from './Styles';
 import { Button } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import { useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig'; 
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 export default function NameScreen() {
-  const route = useRoute ();
+  const route = useRoute();
+
+  const { user } = useContext(AuthContext);
+    const uid = user?.uid;
   const navigation = useNavigation();
   const [name, setName] = useState('');
   const [lastName, setLastName] = useState('');
-  const { userType, uid } = route.params;
+  const { userType} = route.params;
   const handleNext = async () => {
       if (!name.trim() || !lastName.trim()) {
         Alert.alert('Error', 'Please enter both first and last names.');

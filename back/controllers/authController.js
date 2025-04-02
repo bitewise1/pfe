@@ -10,21 +10,28 @@ const login = async (req, res) => {
 
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         const userRecord = await admin.auth().getUser(decodedToken.uid);
-        
-        const userSnapshot = await db.collection("users").doc(userRecord.uid).get();
+
+        const userRef = db.collection("users").doc(userRecord.uid);
+        let userSnapshot = await userRef.get();
+
         if (!userSnapshot.exists) {
-            await db.collection("users").doc(userRecord.uid).set({
+            await userRef.set({
                 email: userRecord.email,
                 uid: userRecord.uid,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
             });
+            userSnapshot = await userRef.get(); // refresh snapshot
         }
 
-        res.status(200).json({ message: "Connexion réussie", uid: userRecord.uid, email: userRecord.email });
+        const userData = userSnapshot.data();
+        res.status(200).json({ message: "Connexion réussie", user: userData });
+
     } catch (error) {
+        console.error("Login error:", error);
         res.status(401).json({ error: "Token invalide ou expiré" });
     }
 };
+
 
 const register = async (req, res) => {
     try {

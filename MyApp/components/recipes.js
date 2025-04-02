@@ -5,7 +5,12 @@ import TabNavigation from './TabNavigation';
 import styles from './Styles';
 import Card from './Card';
 import { Ionicons } from '@expo/vector-icons';
+import { useContext} from 'react';
+import { AuthContext } from './AuthContext';
 export default function Recipes() {
+  const { user } = useContext(AuthContext);
+    const uid = user?.uid;
+    console.log("This screen is used by:", uid);
   return (
     <View style={styles.mainContainer}>
       <Header subtitle={`A Burst of Flavor Awaits!

@@ -6,10 +6,14 @@ import { Button } from 'react-native-paper';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig'; 
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 export default function DietaryPreferences() {
+  const { user } = useContext(AuthContext);
+    const uid = user?.uid;
   const navigation = useNavigation();
   const route = useRoute();
-  const { uid } = route.params || {};  
+  
 
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [customDiet, setCustomDiet] = useState(''); 

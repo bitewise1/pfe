@@ -14,8 +14,11 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import { FacebookAuthProvider } from "firebase/auth";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
+import { AuthContext } from '../components/AuthContext';
+import { useContext } from 'react';
 import API from '../config'
 export default function SignUp() {  
+  const { setUser } = useContext(AuthContext);
     const route = useRoute();
     const userType = route.params?.userType || 'Unknown';  
     console.log("UserType received in SignUp:", userType); 
@@ -69,7 +72,7 @@ export default function SignUp() {
       try {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           const userId = userCredential.user.uid;
-      
+          setUser(userCredential.user); 
           console.log("User created in Firebase Auth:", userId);
       
           // user creation in firestore 
@@ -107,6 +110,8 @@ export default function SignUp() {
               .then(async (userCredential) => {
                   console.log("Google Sign Up Success:", userCredential.user.uid);
                   const uid = userCredential.user.uid;
+                  setUser(userCredential.user);
+
   
                   // Send ID Token to Backend
                   const backendResponse = await fetch(API.SOCIAL_AUTH, {
@@ -140,6 +145,8 @@ export default function SignUp() {
               const credential = FacebookAuthProvider.credential(result.token);
               const userCredential = await signInWithCredential(auth, credential);
               console.log("Facebook Sign Up Success:", userCredential.user.uid);
+              setUser(userCredential.user);
+
               const idToken = result.token; // Facebook token
   
               // Send ID Token to Backend

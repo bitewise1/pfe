@@ -3,12 +3,12 @@ import NameScreen from './NameScreen';
 import LogIn from './LogIn';
 import ResetPassword from './ResetPassword';
 import UserType from './UserType';
-import GoalScreen from './goalScreen';
+import GoalScreen from './GoalScreen'; 
 import NutritionForm from './NutritionForm';
 import SettingProfile from './SettingProfile';
 import MotivationalScreen from './MotivationalScreen';
 import TransformationScreen from './TransformationScreen';
-import DietaryPreferences from './dietaryPreferences';
+import DietaryPreferences from './DietaryPreferences'; 
 import ActivityLevel from './ActivityLevel';
 import Gratitude from './Gratitude';
 import SignUp from './SignUp';
@@ -26,9 +26,8 @@ import NutritionistInfo from './NutritionistInfo';
 import MessagesGuidance from './MessagesGuidance';
 import ProfessionalChat from './ProfessionalChat';
 import ProfileInfoSettings from './ProfileInfoSettings';
-import GoalInfoSettings from './GoalsInfoSettings';
-import DieataryInfoSettings from './DieataryInfoSettings';
-import ActivtyInfoSettings from './ActivtyInfoSettings';
+import GoalsInfoSettings from './GoalsInfoSettings';
+import EstimationScreen from './EstimationScreen';
 import AccountSettings from './AccountSettings';
 import RemindersSettings from './RemindersSettings';
 import LogOutSettings from './LogOutSettings';
@@ -71,13 +70,12 @@ export default function AppNavigator(){
                 <Stack.Screen name = 'MessagesGuidance' component={MessagesGuidance}/>
                 <Stack.Screen name = 'ProfessionalChat' component={ProfessionalChat}/> 
                 <Stack.Screen name = 'ProfileInfoSettings' component={ProfileInfoSettings} />
-                <Stack.Screen name = 'GoalInfoSettings' component={GoalInfoSettings}/>
-                <Stack.Screen name = 'DieataryInfoSettings' component={DieataryInfoSettings} />
-                <Stack.Screen name = 'ActivtyInfoSettings' component={ActivtyInfoSettings} />
+                <Stack.Screen name = 'GoalsInfoSettings' component={GoalsInfoSettings}/>
+
                 <Stack.Screen name = 'AccountSettings' component={AccountSettings} />
                 <Stack.Screen name = 'RemindersSettings' component={RemindersSettings}/>
                 <Stack.Screen name = 'LogOutSettings' component={LogOutSettings}/>
-
+                <Stack.Screen name = 'EstimationScreen' component={EstimationScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

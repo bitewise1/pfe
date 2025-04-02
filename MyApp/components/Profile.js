@@ -6,7 +6,12 @@ import styles from './Styles';
 import { useState } from 'react';
 import { BarChart } from 'react-native-chart-kit';
 import { Button } from 'react-native-paper';
+import { useContext} from 'react';
+import { AuthContext } from './AuthContext';
 export default function Profile() {
+  const { user } = useContext(AuthContext);
+  const uid = user?.uid;
+  console.log("This screen is used by:", uid);
   const itemWidth = 25;
   const min = 35;
   const max = 230;

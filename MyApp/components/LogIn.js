@@ -8,8 +8,13 @@ import * as Facebook from 'expo-facebook';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from "../firebaseConfig";  
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useContext } from 'react';
+import { AuthContext } from '../components/AuthContext';
+
+
 import API from '../config'
 export default function LogIn() {
+  const { setUser } = useContext(AuthContext);
   const navigation = useNavigation(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,9 +49,17 @@ export default function LogIn() {
       console.log("Backend response:", data);
 
       if (response.ok) {
-        console.log("Connexion réussie:", data);
-        navigation.navigate('Home');  
-      } else {
+        const user = data.user;
+        setUser(user);
+        navigation.navigate('Home', {
+          uid: user.uid,
+          plan: user.nutritionPlan,
+          preferences: user.dietaryPreferences || [],
+          userGoal: user.goal
+        });
+      }
+      
+       else {
         setServerError(data.error || 'Erreur inconnue');
       }
     } catch (error) {
