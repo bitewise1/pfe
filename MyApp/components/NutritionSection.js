@@ -51,7 +51,7 @@ export default function NutritionSection() {
             source={require('../assets/Animations/doctorLoading.json')}
             autoPlay
             loop
-            style={{ width: 450, height: 450 }}
+            style={{ width: 400, height: 400 }}
           />
         </View>
       ) : (

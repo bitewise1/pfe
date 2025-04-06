@@ -31,7 +31,7 @@ import EstimationScreen from './EstimationScreen';
 import AccountSettings from './AccountSettings';
 import RemindersSettings from './RemindersSettings';
 import LogOutSettings from './LogOutSettings';
-
+import RecipeDetail from './RecipeDetail';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -76,6 +76,7 @@ export default function AppNavigator(){
                 <Stack.Screen name = 'RemindersSettings' component={RemindersSettings}/>
                 <Stack.Screen name = 'LogOutSettings' component={LogOutSettings}/>
                 <Stack.Screen name = 'EstimationScreen' component={EstimationScreen} />
+                <Stack.Screen name = 'RecipeDetail' component={RecipeDetail}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

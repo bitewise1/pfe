@@ -58,9 +58,10 @@ export default function Home() {
         const userRes = await axios.get(`http://10.0.2.2:3000/user/${uid}`);
         const userData = userRes.data;
   
+        // Set user goal, preferences, and nutrition plan
         setUserGoal(userData.goal || '');
         setPreferences(userData.dietaryPreferences || []);
-        setPlan(userData.nutritionPlan || {});
+        setPlan(userData.nutritionPlan || { calories: 0, carbs: 0, protein: 0, fat: 0, fiber: { recommended: 0 } });
       } catch (err) {
         console.error('Error loading user data:', err);
       }
@@ -68,6 +69,7 @@ export default function Home() {
   
     fetchData();
   }, [uid]);
+  
   
   return (
     <View style={styles.mainContainer}>
@@ -115,15 +117,15 @@ achieve your goals?`} />
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image source={require('../assets/Images/Food.png')} />
                   <View>
-                    <Text style={styles.remaining}>Food</Text>
-                    <Text style={styles.remainingValue}>1400</Text>
+                    <Text style={styles.remaining}>Consumed</Text>
+                    <Text style={styles.remainingValue}>0</Text>
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image source={require('../assets/Images/Streak.png')} />
                   <View>
                     <Text style={styles.remaining}>Streak</Text>
-                    <Text style={styles.remainingValue}>3 days</Text>
+                    <Text style={styles.remainingValue}>1 day</Text>
                   </View>
                 </View>
               </View>

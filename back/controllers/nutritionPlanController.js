@@ -9,7 +9,8 @@ const FIBER_GOAL_HIGH = 38;
  * @access  Private
  */
 const calculateNutritionPlan = (userData) => {
-  const heightCm = userData.height * 100;
+  const heightCm = userData.height; // Already in cm, no conversion needed
+
   const bmr = userData.gender.toLowerCase() === 'male'
     ? 10 * userData.weight + 6.25 * heightCm - 5 * userData.age + 5
     : 10 * userData.weight + 6.25 * heightCm - 5 * userData.age - 161;
@@ -21,21 +22,32 @@ const calculateNutritionPlan = (userData) => {
     "Active Lifestyle": 1.725,
     "Highly Active": 1.9
   };
-  
-  const tdee = bmr * (activityMap[userData.activityLevel] || 1.2);
+
+  const activityFactor = activityMap[userData.activityLevel] || 1.375;  // Default to "Lightly Active" if missing
+  const tdee = bmr * activityFactor;
 
   let calories;
   switch(userData.goal) {
-    case "Losing Weight": calories = tdee - 500; break;
-    case "Gaining Weight": calories = tdee + 500; break;
-    default: calories = tdee;
+    case "Losing Weight": 
+      calories = tdee - 500; 
+      break;
+    case "Gaining Weight": 
+      calories = tdee + 500; 
+      break;
+    default: 
+      calories = tdee;
   }
+
+  // Calculate macronutrient goals
+  const proteinGoal = Math.round(userData.weight * 1.5);  // Adjust protein goal for weight loss
+  const fatGoal = Math.round((calories * 0.3) / 9);  // 30% of calories from fat
+  const carbsGoal = Math.round((calories * 0.5) / 4);  // 50% of calories from carbs
 
   return {
     calories: Math.round(calories),
-    protein: Math.round(userData.weight * 2.2),
-    carbs: Math.round((calories * 0.5) / 4),
-    fat: Math.round((calories * 0.3) / 9),
+    protein: proteinGoal,
+    carbs: carbsGoal,
+    fat: fatGoal,
     fiber: {
       min: FIBER_GOAL_LOW,
       max: FIBER_GOAL_HIGH,
@@ -68,7 +80,7 @@ const saveNutritionPlan = async (req, res) => {
     const userData = userDoc.data();
     const nutritionPlan = calculateNutritionPlan(userData);
 
-    // Save the calculated plan
+    // Save or update the nutrition plan
     await userRef.update({
       nutritionPlan: {
         ...nutritionPlan,

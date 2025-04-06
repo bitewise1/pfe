@@ -814,7 +814,7 @@ googleButton: {
     }, 
     cardImage:{
       width: '100%',
-      height: '70%',
+      height: '65%',
       resizeMode: 'cover',
       borderTopLeftRadius: pxToDp(20),
       borderTopRightRadius: pxToDp(20),
@@ -1094,6 +1094,137 @@ buttonTextEstim: {
 buttonIconEstim: {
   marginLeft: 8,
 },
+// card for recipes :
+cardRecipeTitle:{
+  color: '#000',
+  textAlign: 'center', 
+  fontFamily: 'Quicksand_700Bold',
+  fontSize: pxToDp(20),
+  paddingLeft: pxToDp(10),
+  marginVertical: pxToDp(10)
+},
+cardRecipeDescription:{
+  color: '#000',
+  textAlign: 'center', 
+  fontFamily: 'Quicksand_600SemiBold',
+  fontSize: pxToDp(15),
+  paddingLeft: pxToDp(10),
+  marginBottom: pxToDp(5)
+}, 
+cardRecipeContainer:{
+  flex: 1,
+  alignItems: 'center',
 
-})
+  backgroundColor: '#FCCF94',
+  borderRadius: pxToDp(20),
+  width: '90%',
+  height: pxToDp(350),
+  marginVertical: pxToDp(13),
+  shadowColor: '#000',
+  shadowOpacity: 0.2,
+  shadowRadius: pxToDp(10),
+  elevation: 5,
+  shadowOffset: { width: 0, height: pxToDp(2) },
+  marginHorizontal: pxToDp(20),
+  padding: pxToDp(10),
+}, 
+// Recipe Details screen 
+cardReImage: {
+  width: '100%',
+  height: 250,
+  borderRadius: 10,
+},
+contentContainer: {
+  padding: 20,
+  backgroundColor: '#F5E4C3',
+},
+titlerRecipe: {
+  fontSize: 24,
+  fontFamily: 'Quicksand_700Bold',
+  marginVertical: 10,
+  textAlign: 'center',
+},
+section: {
+  marginVertical: 10,
+  
+},
+sectionHeader: {
+  backgroundColor: '#FCCF94', // Light yellow background color for the section
+  padding: 10,
+  borderRadius: 20,
+  marginVertical: 10,
+},
+nutrientTitle: {
+  fontSize: 16,
+  color: '#2E4A32', // Green for the title
+  fontFamily: 'Quicksand_700Bold',
+},
+nutrientValue: {
+  fontSize: 16,
+  color: '#000', // Black for the value
+  fontFamily: 'Quicksand_600SemiBold',
+},
+mealTypeRecipe: {
+  fontSize: 18,
+  color: '#2E4A32', // Green color
+  fontFamily: 'Quicksand_700Bold',
+},
+dietType: {
+  fontSize: 18,
+  color: '#2E4A32', // Green color
+  fontFamily: 'Quicksand_700Bold',
+},
+dietValue: {
+  fontFamily: 'Quicksand_600SemiBold',
+  color: '#000', // Black color for the value
+},
+caloriesRecipe: {
+  fontSize: 16,
+  color: '#000',
+  fontFamily: 'Quicksand_600SemiBold',
+},
+proteinRecipe: {
+  fontSize: 16,
+  color: '#000',
+  fontFamily: 'Quicksand_600SemiBold',
+},
+carbsRecipe: {
+  fontSize: 16,
+  color: '#000',
+  fontFamily: 'Quicksand_600SemiBold',
+},
+fiberRecipe: {
+  fontSize: 16,
+  color: '#000',
+  fontFamily: 'Quicksand_600SemiBold',
+},
+ingredientsTitle: {
+  fontSize: 18,
+  fontFamily: 'Quicksand_700Bold',
+  marginBottom: 5,
+  color: '#2E4A32',
+},
+ingredient: {
+  fontSize: 16,
+  color: '#000',
+  marginLeft: 20,
+},
+instructionsTitle: {
+  fontSize: 18,
+  fontFamily: 'Quicksand_700Bold',
+  marginTop: 15,
+  color: '#2E4A32',
+},
+instructions: {
+  fontSize: 16,
+  color: '#000',
+  marginLeft: 20,
+  marginTop: 5,
+},
+loader: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+});
 export default styles;
