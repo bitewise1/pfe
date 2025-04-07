@@ -1149,34 +1149,34 @@ section: {
   
 },
 sectionHeader: {
-  backgroundColor: '#FCCF94', // Light yellow background color for the section
+  backgroundColor: '#FCCF94', 
   padding: 10,
   borderRadius: 20,
   marginVertical: 10,
 },
 nutrientTitle: {
   fontSize: 16,
-  color: '#2E4A32', // Green for the title
+  color: '#2E4A32', 
   fontFamily: 'Quicksand_700Bold',
 },
 nutrientValue: {
   fontSize: 16,
-  color: '#000', // Black for the value
+  color: '#000', 
   fontFamily: 'Quicksand_600SemiBold',
 },
 mealTypeRecipe: {
   fontSize: 18,
-  color: '#2E4A32', // Green color
+  color: '#2E4A32', 
   fontFamily: 'Quicksand_700Bold',
 },
 dietType: {
   fontSize: 18,
-  color: '#2E4A32', // Green color
+  color: '#2E4A32',
   fontFamily: 'Quicksand_700Bold',
 },
 dietValue: {
   fontFamily: 'Quicksand_600SemiBold',
-  color: '#000', // Black color for the value
+  color: '#000', 
 },
 caloriesRecipe: {
   fontSize: 16,
@@ -1225,6 +1225,7 @@ loader: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
+  backgroundColor: '#FCCF94',
 },
 });
 export default styles;

@@ -1,86 +1,125 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
+// Use styles from './Styles.js'
 import styles from './Styles';
-import { useState} from 'react';
+import { useState, useContext } from 'react'; // Added useContext
 import { Button } from 'react-native-paper';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'; // Removed useRoute
 import { Ionicons } from '@expo/vector-icons';
-import { auth } from '../firebaseConfig'; 
-import { AuthContext } from '../components/AuthContext';
-import { useContext } from 'react';
+import { auth } from '../firebaseConfig'; // For getting idToken
+// *** Import AuthContext ***
+import { AuthContext } from '../components/AuthContext'; // Adjust path if needed
+import axios from 'axios'; // Use axios for consistency
+
 export default function ActivityLevel() {
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { user } = useContext(AuthContext);
-      const uid = user?.uid;
+    const navigation = useNavigation();
+    // *** Use AuthContext to get user and uid ***
+    const { user } = useContext(AuthContext);
+    const uid = user?.uid; // Get uid from context
 
-  const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(null); // State for the chosen activity level
 
-  const handleOptions = (option) => {
-    setSelected(option);
-  };
+    // *** Ensure options array EXACTLY matches backend validation strings ***
+    const activityOptions = [
+        "Mostly Sitting 🪑",
+        "Lightly Active 🚶", // Removed leading space
+        "Active Lifestyle 🚴",
+        "Highly Active 💪"
+    ];
 
-  const handleSelect = async () => {
-    if (!selected) {
-      Alert.alert("Please select an activity level!");
-      return;
-    }
-
-    const API_URL = "http://10.0.2.2:3000/user/updateActivityLevel";
-
-    const requestBody = {
-      uid,
-      activityLevel: selected,
+    const handleOptions = (option) => {
+        setSelected(option);
     };
 
-    try {
-      const idToken = await auth.currentUser.getIdToken(true);
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${idToken}` },
-        body: JSON.stringify(requestBody),
-      });
+    const handleSelect = async () => {
+        // *** Add UID Check ***
+        if (!uid) {
+             Alert.alert("Error", "User session not found. Please log out and log back in.");
+             return;
+        }
 
-      const data = await response.json();
+        if (!selected) {
+            Alert.alert("Selection Needed", "Please select an activity level!"); // Changed Alert title
+            return;
+        }
 
-      if (response.ok) {
-        console.log("Activity Level Updated:", data);
-        navigation.navigate("EstimationScreen", { uid });
-      } else {
-        Alert.alert("Error", data.error || "Failed to update activity level");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      Alert.alert("Error", "Something went wrong. Please try again.");
-    }
-  };
-  return (
-    <View style= {styles.container}>
-    
-      <TouchableOpacity onPress={() => navigation.goBack() } style={styles.backButton}>
-        <Ionicons name="arrow-back" size={38}/>
-      </TouchableOpacity>
-     
-      <Image source={require('../assets/Images/leaf.png')} style= {styles.topLeaf}/>
-      <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
-      <Text style={styles.dietaryText}>How active are you in  your daily life ? </Text>
+        // Use consistent base URL and path construction (NO /api prefix)
+        const API_BASE_URL = 'http://10.0.2.2:3000';
+        const API_URL = `${API_BASE_URL}/user/updateActivityLevel`; // Matches backend route
 
-        <View style={styles.optionsContainer}> {['Mostly Sitting 🪑', ' Lightly Active 🚶', 'Active Lifestyle 🚴', 'Highly Active 💪'].map((option) => (
-          <TouchableOpacity key={option} style={[
-             styles.optionButton,
-             selected === option && styles.selected, 
-             ]} onPress={()=>handleOptions(option)}>
-          <Text style={styles.optionText}>{option}</Text>
-         </TouchableOpacity>
-            ))}
-           <View style={styles.buttonContainer}>
-            <Button mode= 'contained' style={styles.button} labelStyle={styles.textButton} onPress={() => {
-              handleSelect(); 
-             } }>Next</Button>
-           </View>
-        
-     </View>
-    
-    </View>
-  );
+        const requestBody = {
+            uid, // UID from context
+            activityLevel: selected, // The selected option string
+        };
+        console.log("Sending activity level update:", requestBody);
+
+        try {
+            // Get token if needed for backend auth verification
+            // const idToken = auth.currentUser ? await auth.currentUser.getIdToken(true) : null;
+            // if (!idToken) { Alert.alert("Auth Error", "Please log in again."); return; }
+
+            // Use axios
+            const response = await axios.post(API_URL, requestBody, {
+                 // Add headers if needed, e.g., Authorization
+                 // headers: { Authorization: `Bearer ${idToken}` }
+             });
+
+            console.log("Activity Level Updated Response:", response.data);
+            // Navigate to the next screen, passing uid if necessary
+            navigation.navigate("EstimationScreen", { uid });
+
+        } catch (error) {
+            console.error("Update Activity Level Error:", error.response ? JSON.stringify(error.response.data) : error.message);
+            Alert.alert("Update Error", error.response?.data?.error || "Failed to update activity level. Please try again.");
+        }
+    };
+
+    return (
+        // Use styles from './Styles.js'
+        <View style={styles.container}>
+
+            {/* Back Button */}
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                <Ionicons name="arrow-back" size={38} />
+            </TouchableOpacity>
+
+            {/* Decorative Images */}
+            <Image source={require('../assets/Images/leaf.png')} style={styles.topLeaf} />
+            <Image source={require('../assets/Images/leaf.png')} style={styles.bottomLeaf} />
+
+            {/* Title Text */}
+            <Text style={styles.dietaryText}>How active are you in your daily life?</Text>
+
+            {/* Options Container */}
+            <View style={styles.optionsContainer}>
+                {activityOptions.map((option) => ( // Map over the corrected array
+                    <TouchableOpacity
+                        key={option}
+                        style={[
+                            styles.optionButton, // Your base button style
+                            selected === option && styles.selected, // Your selected style
+                        ]}
+                        onPress={() => handleOptions(option)}
+                    >
+                        {/* Your text style */}
+                        <Text style={styles.optionText}>{option}</Text>
+                    </TouchableOpacity>
+                ))}
+
+                {/* Button Container */}
+                <View style={styles.buttonContainer}>
+                    <Button
+                        mode='contained'
+                        style={styles.button} // Your button style
+                        labelStyle={styles.textButton} // Your label style
+                        onPress={handleSelect} // Call the async handler directly
+                    >
+                        Next
+                    </Button>
+                </View>
+
+            </View>
+
+        </View>
+    );
 }

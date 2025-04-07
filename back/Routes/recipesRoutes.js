@@ -1,9 +1,11 @@
-// routes/recipesRoutes.js
 const express = require('express');
+const { fetchRecipes, getRecipeDetails } = require('../controllers/recipesController'); 
 const router = express.Router();
-const recipesController = require('../controllers/recipesController');
 
-// Route to fetch personalized recipes for the user
-router.post('/fetch-recipes', recipesController.fetchRecipes);
+// Route to fetch a list of recipes based on criteria
+router.post('/fetch-recipes', fetchRecipes);
+
+// Route to get details for a single recipe (with caching)
+router.get('/details/:recipeId', getRecipeDetails);
 
 module.exports = router;
