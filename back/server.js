@@ -35,6 +35,8 @@ const nutritionPlanRoutes = require("./Routes/nutritionPlanRoutes");
 const recipesRoutes = require('./Routes/recipesRoutes');
 const logMealRoutes = require('./Routes/logMealRoutes'); // Use correct variable name if different
 const profileRoutes = require('./Routes/profileRoutes');
+const coachingRoutes = require('./Routes/coachingRoutes');
+
 const app = express();
 
 // --- Middleware ---
@@ -54,6 +56,7 @@ app.use("/nutritionPlan", nutritionPlanRoutes);
 app.use('/recipes', recipesRoutes);
 app.use('/logMeal', logMealRoutes); 
 app.use('/user', profileRoutes); 
+app.use('/coaching', coachingRoutes);
 // --- Error Handler ---
 app.use((err, req, res, next) => {
   console.error("Unhandled Route Error:", err.stack);

@@ -32,6 +32,11 @@ import AccountSettings from './AccountSettings';
 import RemindersSettings from './RemindersSettings';
 import LogOutSettings from './LogOutSettings';
 import RecipeDetail from './RecipeDetail';
+import FindSpecialist from './FindSpecialist';
+import ActiveCoachDashboard from './ActiveCoachDashboard';
+
+
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -77,6 +82,8 @@ export default function AppNavigator(){
                 <Stack.Screen name = 'LogOutSettings' component={LogOutSettings}/>
                 <Stack.Screen name = 'EstimationScreen' component={EstimationScreen} />
                 <Stack.Screen name = 'RecipeDetail' component={RecipeDetail}/>
+                <Stack.Screen name = 'FindSpecialist' component={FindSpecialist}/>
+                <Stack.Screen name = 'ActiveCoachDashboard' component={ActiveCoachDashboard}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

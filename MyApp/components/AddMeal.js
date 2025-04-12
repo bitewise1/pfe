@@ -8,13 +8,16 @@ import { useState } from 'react';
 import * as ImagePicker  from 'expo-image-picker'
 import { Camera } from 'expo-camera'; 
 import { useRef } from 'react';
-import { useEffect } from 'react';
-
+import { useEffect, useContext } from 'react';
+import { AuthContext } from './AuthContext';
 export default function AddMeal() {
   const cameraRef = useRef(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [photo, setPhoto] = useState(null);
   const [image, setImage] = useState(null);
+  const { user } = useContext(AuthContext);
+  const uid = user?.uid;
+  
   //pick image from library
     const pickImage = async () =>{
       const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();

@@ -1,53 +1,53 @@
 import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, TextInput, RefreshControl } from 'react-native'; // Added RefreshControl
 import { AuthContext } from './AuthContext';
-import Card from './Card'; // Your custom card component
+import Card from './Card'; 
 import axios from 'axios';
-import styles from './Styles'; // Your shared styles
+import styles from './Styles'; 
 import LottieView from 'lottie-react-native';
-import Header from './Header'; // Your header component
-import TabNavigation from './TabNavigation'; // Your tab navigation component
+import Header from './Header'; 
+import TabNavigation from './TabNavigation'; 
 import { Ionicons } from '@expo/vector-icons';
 
-// Define your backend URL (use 10.0.2.2 for Android Emulator)
-const API_BASE_URL = 'http://10.0.2.2:3000'; // Or your deployed backend URL
+const API_BASE_URL = 'http://10.0.2.2:3000'; 
 
 export default function Recipes({ navigation }) {
     const { user } = useContext(AuthContext);
     const [recipes, setRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [isRefreshing, setIsRefreshing] = useState(false); // For pull-to-refresh
+    const [isRefreshing, setIsRefreshing] = useState(false); 
+  
 
-    // Memoize user data extraction to prevent unnecessary recalculations
+    
     const { uid, dietaryPreferences, nutritionPlan, otherDietaryText } = useMemo(() => ({
         uid: user?.uid,
         dietaryPreferences: user?.dietaryPreferences || [],
         nutritionPlan: user?.nutritionPlan || {},
-        otherDietaryText: user?.otherDietaryText || '', // Fetch 'other' text if available
+        otherDietaryText: user?.otherDietaryText || '', 
     }), [user]);
 
-    // Process dietary preferences (memoized)
+    
     const processedDietaryPreferences = useMemo(() => {
         let prefs = Array.isArray(dietaryPreferences) ? [...dietaryPreferences] : [];
-        // Remove "No Restrictions" if other prefs exist, or keep it if it's the only one
+       
         const noRestrictionsIndex = prefs.findIndex(p => p.includes("No Restrictions"));
         if (noRestrictionsIndex > -1) {
             if (prefs.length > 1) {
-                prefs.splice(noRestrictionsIndex, 1); // Remove it if others exist
+                prefs.splice(noRestrictionsIndex, 1); 
             } else {
-                 prefs = []; // Treat "No Restrictions" alone as empty preferences for API
+                 prefs = []; 
             }
         }
-        // Ensure the list includes 'Other' if otherDietaryText is present and 'Other' isn't already selected
+       
          if (otherDietaryText && !prefs.some(p => p.toLowerCase().includes('other'))) {
-             prefs.push('Other'); // Make sure backend mapping for 'Other' is triggered
+             prefs.push('Other'); 
          }
         return prefs;
     }, [dietaryPreferences, otherDietaryText]);
 
 
-    // Fetch recipes function (using useCallback for stability)
+   
     const fetchRecipes = useCallback(async (query = "", refreshing = false) => {
         if (!uid) {
             console.log("No UID, cannot fetch recipes.");
@@ -55,7 +55,7 @@ export default function Recipes({ navigation }) {
             setIsRefreshing(false);
             return;
         }
-        if (!refreshing) setLoading(true); // Only show full loader if not refreshing
+        if (!refreshing) setLoading(true); 
 
         try {
             // Extract goals, providing defaults

@@ -1,36 +1,31 @@
-// controllers/recipesController.js
 
-// Import the object holding the instances - needed for 'db' in getRecipeDetails
 const { firebaseInstances } = require('../config/firebase');
-// Access db via the firebaseInstances object
+
 const db = firebaseInstances.db;
-// Access admin if FieldValue was needed (not currently used here, but good practice)
-// const admin = firebaseInstances.admin;
+
 
 const axios = require('axios');
-require('dotenv').config(); // Ensure API key is loaded
+require('dotenv').config(); 
 
 const SPOONACULAR_API_KEY = process.env.SPOONACULAR_API_KEY;
 
 if (!SPOONACULAR_API_KEY) {
     console.error("FATAL ERROR: SPOONACULAR_API_KEY is not defined in .env file.");
-    // process.exit(1); // Optional: stop server if key is missing
+ 
 }
-
-// --- Helper function for safety checks (Only checks DB for getRecipeDetails) ---
 function checkRecipeDbInitialized(res) {
     if (!db) {
         console.error("FATAL: Firebase DB not initialized when trying to access recipe cache.");
         res.status(500).json({ error: "Server configuration error (Recipe Cache). Please try again later." });
-        return false; // Indicates failure
+        return false;
     }
-    return true; // Indicates success
+    return true; 
 }
 
 
-// --- Fetch Multiple Recipes (Does NOT need Firebase check) ---
+
 const fetchRecipes = async (req, res) => {
-    // No Firebase check needed here as it only calls Spoonacular
+   
     try {
         let { uid, dietaryPreferences, dailyCalories, proteinGoal, carbsGoal, fatGoal, fiberGoal, searchQuery, otherDietaryText } = req.body;
 

@@ -1,23 +1,19 @@
-// controllers/nutritionPlanController.js
 
-// Import the object holding the instances
 const { firebaseInstances } = require('../config/firebase');
-// Access admin and db via the firebaseInstances object
+
 const admin = firebaseInstances.admin;
 const db = firebaseInstances.db;
 
-// Constants for fiber calculations
 const FIBER_GOAL_LOW = 25;
 const FIBER_GOAL_HIGH = 38;
 
-// --- Helper function for safety checks ---
 function checkNutritionPlanFirebaseInitialized(res) {
     if (!admin || !db) {
         console.error("FATAL: Firebase Admin/DB not initialized when trying to access nutrition plan routes.");
         res.status(500).json({ error: "Server configuration error (Nutrition Plan). Please try again later." });
-        return false; // Indicates failure
+        return false; 
     }
-    return true; // Indicates success
+    return true; 
 }
 
 /**

@@ -915,10 +915,8 @@ buttons:{
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 20,
-  paddingVertical: 8,
-  marginVertical: 13, 
-  paddingHorizontal: 8, 
-  width: '85%', 
+  marginVertical: 20, 
+  width: '90%', 
   height: 55,
   elevation: 2, 
   shadowColor: '#000', 
@@ -930,10 +928,10 @@ messageContainer:{
   alignItems: 'center'
 },
 RatingEntry:{
-  textAlign: 'left',
+
   fontFamily: 'Quicksand_600SemiBold',
-  fontSize: pxToDp(20),
-  paddingLeft: pxToDp(30),
+  fontSize: pxToDp(22),
+
   marginVertical: pxToDp(10)
 },
 settingsButton:{
