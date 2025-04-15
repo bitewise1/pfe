@@ -294,34 +294,64 @@ exports.endRelationship = async (req, res) => {
 // --- Block a Coach ---
 exports.blockCoach = async (req, res) => {
     if (!checkFirebaseReady(res, "block coach")) return;
-    const userId = req.user?.uid; const { nutritionistId } = req.body;
+    const userId = req.user?.uid;
+    const { nutritionistId } = req.body;
     if (!userId) return res.status(401).json({ error: "User authentication missing." });
     if (!nutritionistId) return res.status(400).json({ error: "Nutritionist ID to block is required." });
+  
     console.log(`CTRL: blockCoach request from user: ${userId} for nutritionist: ${nutritionistId}`);
+  
     try {
-        const userDocRef = db.collection('users').doc(userId);
-        const blockDocRef = userDocRef.collection('blockedCoaches').doc(nutritionistId);
-         await db.runTransaction(async (transaction) => {
-             const userDoc = await transaction.get(userDocRef);
-             const userData = userDoc.exists ? userDoc.data() : {}; const activeCoachId = userData.activeCoachId;
-             if (activeCoachId && activeCoachId === nutritionistId) {
-                 console.log(`CTRL Transaction: Ending relationship with ${activeCoachId} due to block.`);
-                 transaction.update(userDocRef, { activeCoachId: FieldValue.delete() });
-                 const requestsCollectionRef = userDocRef.collection('coachRequests');
-                 const q = requestsCollectionRef.where("nutritionistId", "==", activeCoachId).where("status", "==", "selected").limit(1);
-                 const requestSnap = await transaction.get(q);
-                 if (!requestSnap.empty) { transaction.update(requestSnap.docs[0].ref, { status: 'blocked_by_user', endedTimestamp: FieldValue.serverTimestamp() }); }
-             }
-             console.log(`CTRL Transaction: Setting block document for coach ${nutritionistId}`);
-             transaction.set(blockDocRef, { blockedAt: FieldValue.serverTimestamp() });
-         });
-        console.log(`CTRL: Nutritionist ${nutritionistId} blocked successfully by user ${userId}.`);
-        res.status(200).json({ message: "Coach blocked and relationship ended if active." });
+      const userDocRef = db.collection('users').doc(userId);
+      const blockDocRef = userDocRef.collection('blockedCoaches').doc(nutritionistId);
+      const requestsCollectionRef = userDocRef.collection('coachRequests');
+  
+      await db.runTransaction(async (transaction) => {
+        const userDoc = await transaction.get(userDocRef);
+        const userData = userDoc.exists ? userDoc.data() : {};
+        const activeCoachId = userData.activeCoachId;
+  
+        let requestDocToUpdate = null;
+  
+        if (activeCoachId && activeCoachId === nutritionistId) {
+          console.log(`CTRL Transaction: Ending relationship with ${activeCoachId} due to block.`);
+  
+          // 🔄 Lire d'abord la coachRequest avant toute écriture
+          const q = requestsCollectionRef
+            .where("nutritionistId", "==", activeCoachId)
+            .where("status", "==", "selected")
+            .limit(1);
+          const requestSnap = await transaction.get(q);
+          if (!requestSnap.empty) {
+            requestDocToUpdate = requestSnap.docs[0].ref;
+          }
+        }
+  
+        // ✅ Toutes les écritures après les lectures
+        if (activeCoachId && activeCoachId === nutritionistId) {
+          transaction.update(userDocRef, { activeCoachId: FieldValue.delete() });
+          if (requestDocToUpdate) {
+            transaction.update(requestDocToUpdate, {
+              status: 'blocked_by_user',
+              endedTimestamp: FieldValue.serverTimestamp(),
+            });
+          }
+        }
+  
+        console.log(`CTRL Transaction: Setting block document for coach ${nutritionistId}`);
+        transaction.set(blockDocRef, {
+          blockedAt: FieldValue.serverTimestamp(),
+        });
+      });
+  
+      console.log(`CTRL: Nutritionist ${nutritionistId} blocked successfully by user ${userId}.`);
+      res.status(200).json({ message: "Coach blocked and relationship ended if active." });
     } catch (error) {
-        console.error(`CTRL Error: blocking coach ${nutritionistId} for user ${userId}:`, error);
-        res.status(500).json({ message: "Server error blocking coach", error: error.message });
+      console.error(`CTRL Error: blocking coach ${nutritionistId} for user ${userId}:`, error);
+      res.status(500).json({ message: "Server error blocking coach", error: error.message });
     }
-};
+  };
+  
 
 // --- Unblock a Coach ---
 exports.unblockCoach = async (req, res) => {

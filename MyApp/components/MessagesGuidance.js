@@ -7,13 +7,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Header from "../components/Header"; // Adjust path
 import TabNavigation from "../components/TabNavigation"; // Adjust path
 import { AuthContext } from '../components/AuthContext'; // Adjust path
-
+import styles from './Styles';
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000';
 
-// Assume stylesFromSheet contains all necessary base styles like
-// mainContainer, smallPear, messageContainer, RatingEntry, buttons, addText, buttonDisabled etc.
-// If not, they need to be defined in localStyles or the import fixed.
-const styles = stylesFromSheet;
+
+
 
 export default function MessagesGuidance (){
     const navigation = useNavigation();
@@ -172,8 +170,7 @@ export default function MessagesGuidance (){
       <View style={styles.mainContainer}>
          <Header subtitle={"Messages & Guidance"}/>
 
-         {/* Using ScrollView to ensure content fits */}
-         <ScrollView contentContainerStyle={localStyles.scrollContainer}>
+   
 
             {/* Your potato image */}
             <Image source={require('../assets/Images/potato.png')} style={[styles.smallPear, localStyles.centerImage]}/>
@@ -182,7 +179,7 @@ export default function MessagesGuidance (){
             <View style={styles.messageContainer}>
 
                 {/* Rating Section */}
-                <Text style={styles.RatingEntry}>Rating entry:</Text>
+                <Text style={styles.RatingEntry}>Rating entry</Text>
 
                 {/* Using local style for layout, your styles for appearance */}
                 {/* Removed outer TouchableOpacity as it served no purpose */}
@@ -193,7 +190,7 @@ export default function MessagesGuidance (){
                 {/* Validate Button */}
                 <TouchableOpacity
                     // Use your base button style, add local margin, check disabled state
-                    style={[styles.buttons, localStyles.buttonMargin, (rating === 0 || isSubmitting) && localStyles.buttonDisabled]}
+                    style={[styles.buttons,  (rating === 0 || isSubmitting) && localStyles.buttonDisabled]}
                     onPress={handleValidateRating}
                     disabled={rating === 0 || isSubmitting}
                 >
@@ -203,7 +200,7 @@ export default function MessagesGuidance (){
                 {/* End Relationship Button */}
                 <TouchableOpacity
                     // Use your base button style, add local margin, check disabled state
-                    style={[styles.buttons, localStyles.buttonMargin, isSubmitting && localStyles.buttonDisabled]}
+                    style={[styles.buttons,  isSubmitting && localStyles.buttonDisabled]}
                     onPress={handleEndRelationship}
                     disabled={isSubmitting}
                 >
@@ -213,7 +210,7 @@ export default function MessagesGuidance (){
                 {/* Block Coach Button */}
                 <TouchableOpacity
                     // Use your base button style, add local margin, check disabled state
-                    style={[styles.buttons, localStyles.buttonMargin, isSubmitting && localStyles.buttonDisabled]}
+                    style={[styles.buttons,  isSubmitting && localStyles.buttonDisabled]}
                     onPress={handleBlockCoach}
                     disabled={isSubmitting}
                 >
@@ -224,7 +221,7 @@ export default function MessagesGuidance (){
                  {actionError && <Text style={localStyles.errorText}>{actionError}</Text>}
 
             </View>
-        </ScrollView>
+   
 
          <TabNavigation/>
       </View>
@@ -248,37 +245,31 @@ const localStyles = StyleSheet.create({
           height: styles.smallPear?.height || 100,// Use height from styles or default
           marginBottom: 20,
      },
-     starsRowContainer: { // Replaces your cardRating style for layout
-         flexDirection: 'row', // Keep stars horizontal
+     starsRowContainer: { 
+         flexDirection: 'row', 
          justifyContent: 'center',
          alignItems: 'center',
-         width: '100%', // Take available width
-         // Removed marginBottom: 30 from original inline style, handled by button margins now
-         // Add padding/background here if you want the stars visually grouped like in cardRating
-         paddingVertical: 15, // Example padding
-         // backgroundColor: styles.cardRating?.backgroundColor, // Example background
-         // borderRadius: styles.cardRating?.borderRadius, // Example border radius
-         marginBottom: 10, // Space before Validate button
+         width: '100%', 
+         paddingVertical: 15, 
+         
+         marginBottom: 10, 
      },
-     starsRowInternal: { // Added inner view for star spacing
+     starsRowInternal: { 
          flexDirection: 'row',
      },
-     buttonMargin: { // Replaces individual marginVertical inline styles
-         marginVertical: 10,
-         width: styles.buttons?.width || '95%', // Use width from styles or default
-     },
+     
      errorText: {
          color: 'red',
          marginTop: 15,
          textAlign: 'center',
          fontSize: 14,
      },
-     // Define buttonDisabled locally if not in main Styles.js
+  
      buttonDisabled: {
           opacity: 0.6,
-          backgroundColor: '#cccccc', // Example disabled color
+          backgroundColor: '#cccccc',
      },
-     // Styles for the 'No active coach' view
+   
      centeredMessage: {
         flex: 1,
         justifyContent: 'center',
@@ -286,7 +277,7 @@ const localStyles = StyleSheet.create({
         padding: 20
      },
      linkText: {
-         color: '#007AFF', // Example blue link color
+         color: '#007AFF', 
          marginTop: 10,
          textDecorationLine: 'underline'
      }

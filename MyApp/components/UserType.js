@@ -20,7 +20,7 @@ const handleText = () => {
     navigation.navigate('SignUp', { userType }); 
   } 
   else if (userType === 'Professional') {
-    navigation.navigate('NameScreen', { userType }); 
+    navigation.navigate('NutritionForm', { userType }); 
   } 
   else {
     Alert.alert('Please select an option first');

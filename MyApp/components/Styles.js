@@ -1225,5 +1225,41 @@ loader: {
   alignItems: 'center',
   backgroundColor: '#FCCF94',
 },
+//nutritionistForm 
+filePreviewContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingVertical: 8,
+  paddingHorizontal: 10,
+  backgroundColor: '#f0f9f0', // Lighter green background for success
+  borderRadius: 6,
+  borderWidth: 1,
+  borderColor: '#c0e0c0',
+  marginTop: 5, // Space below upload button
+  marginBottom: 10, // Space before next element
+},
+fileNameText: {
+  flex: 1, // Take up available space
+  fontSize: 14,
+  color: '#333',
+  marginLeft: 5,
+  marginRight: 5,
+},
+profileImagePreview: {
+  width: 40,
+  height: 40,
+  borderRadius: 20, // Circular preview
+  marginRight: 10,
+  borderWidth: 1,
+  borderColor: '#ccc',
+},
+removeFileButton: {
+  padding: 5, // Increase tap area
+},
+// Adjust TextInput style for phone if needed
+TextInput: {
+    // Styles for the number input part of PhoneInput
+    // e.g., height: 48, fontSize: 16
+},
 });
 export default styles;

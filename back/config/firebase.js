@@ -1,73 +1,94 @@
 // config/firebase.js
-require("dotenv").config(); // Load .env variables
+require("dotenv").config(); // Load .env variables AT THE TOP
 const admin = require("firebase-admin");
 const fs = require("fs");
-const path = require('path'); // Use path module for robustness
+const path = require('path');
 
 // Object to hold initialized instances
 const firebaseInstances = {
   admin: null,
   db: null,
   auth: null,
-  _initializationError: null // Store potential error
+  storage: null,
+  _initializationError: null
 };
 
-// Perform Initialization Immediately & Synchronously
+console.log("[Firebase Init] Starting initialization process...");
+
 try {
-  // Check if already initialized (safety check)
   if (admin.apps.length > 0) {
-    console.log("[Firebase Sync Init] SDK already initialized.");
+    console.log("[Firebase Init] SDK already initialized.");
     firebaseInstances.admin = admin;
     firebaseInstances.db = admin.firestore();
     firebaseInstances.auth = admin.auth();
+    firebaseInstances.storage = admin.storage();
   } else {
-    // Get path from environment variable
+    // --- Service Account Path ---
     const serviceAccountRelativePath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-    console.log("[Firebase Sync Init] Path from .env:", serviceAccountRelativePath);
-
+    console.log("[Firebase Init] Service Account Path from .env:", serviceAccountRelativePath);
     if (!serviceAccountRelativePath) {
-      throw new Error("FIREBASE_SERVICE_ACCOUNT_PATH environment variable is not defined.");
+      throw new Error("FIREBASE_SERVICE_ACCOUNT_PATH environment variable is not defined or empty.");
     }
-
-    // Resolve the path relative to the project root (where server.js is likely run)
-    // __dirname here refers to the 'config' directory, so go up one level '../'
-    // Adjust '../' if your config folder is nested differently relative to project root
     const serviceAccountAbsolutePath = path.resolve(__dirname, '../', serviceAccountRelativePath);
-    console.log("[Firebase Sync Init] Attempting to resolve absolute path:", serviceAccountAbsolutePath);
-
-
+    console.log("[Firebase Init] Resolved absolute path for service account:", serviceAccountAbsolutePath);
     if (!fs.existsSync(serviceAccountAbsolutePath)) {
-      throw new Error(`Service account file missing at resolved path: ${serviceAccountAbsolutePath}`);
+      throw new Error(`Service account file NOT FOUND at resolved path: ${serviceAccountAbsolutePath}. Check path in .env and file location.`);
     }
-
-    // Read and parse synchronously
+    console.log("[Firebase Init] Service account file found.");
     const serviceAccountJson = fs.readFileSync(serviceAccountAbsolutePath, 'utf8');
     const serviceAccount = JSON.parse(serviceAccountJson);
-    console.log("[Firebase Sync Init] Service account loaded for project:", serviceAccount.project_id);
+    console.log("[Firebase Init] Service account loaded successfully for project:", serviceAccount.project_id);
 
-    // Initialize synchronously
-    console.log("[Firebase Sync Init] Initializing SDK...");
+    // --- Storage Bucket URL ---
+    const storageBucketUrl = process.env.FIREBASE_STORAGE_BUCKET;
+    console.log("[Firebase Init] Storage Bucket URL from .env:", storageBucketUrl);
+
+    // **MODIFIED VALIDATION: Remove the .endsWith('.appspot.com') check**
+    // Just ensure the variable exists and is a non-empty string.
+    if (!storageBucketUrl || typeof storageBucketUrl !== 'string' || storageBucketUrl.trim() === '') {
+      console.error("!!! CRITICAL ERROR: FIREBASE_STORAGE_BUCKET is missing or empty in .env file!");
+      throw new Error("Missing or empty FIREBASE_STORAGE_BUCKET in .env file.");
+    }
+    // The actual format doesn't matter as much as it being the *correct* name for *your* bucket.
+    console.log("[Firebase Init] Storage Bucket URL check passed (is a non-empty string).");
+
+    // --- Initialize Firebase Admin SDK ---
+    console.log("[Firebase Init] Initializing Firebase Admin SDK...");
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      databaseURL: process.env.FIREBASE_DATABASE_URL, // Make sure this is in .env
+      storageBucket: storageBucketUrl // **USE THE VALUE FROM .ENV**
     });
 
-    // Assign instances immediately after sync initializeApp returns
+    // --- Assign Instances & Verify ---
     firebaseInstances.admin = admin;
     firebaseInstances.db = admin.firestore();
     firebaseInstances.auth = admin.auth();
+    firebaseInstances.storage = admin.storage(); // Attempt to get storage instance
 
-    console.log("[Firebase Sync Init] SDK Initialized & Instances Assigned Successfully.");
+    // **VERIFY STORAGE INSTANCE (Keep this check)**
+    if (!firebaseInstances.storage || typeof firebaseInstances.storage.bucket !== 'function') {
+      console.error("!!! CRITICAL WARNING: admin.storage() did NOT return a valid Storage instance AFTER initialization.");
+      console.error("!!! This usually means the Storage Bucket name provided ('" + storageBucketUrl + "') is incorrect,");
+      console.error("!!! or Cloud Storage is not enabled/configured correctly for this project in the Firebase Console,");
+      console.error("!!! or the service account doesn't have permissions for Storage.");
+      // throw new Error("Failed to obtain a valid Firebase Storage instance."); // Uncomment to make it fatal
+    } else {
+        console.log("[Firebase Init] Storage instance obtained successfully.");
+    }
+
+    console.log("[Firebase Init] SDK Initialized & Instances Assigned.");
   }
 
 } catch (error) {
-  // Catch ANY error during the sync initialization block
-  console.error("!!! [Firebase Sync Init] Initialization Failed:", error.message); // Log just the message for clarity first
-  console.error("!!! Full Error Stack:", error.stack); // Log stack for details
-  firebaseInstances._initializationError = error; // Store the error for checking in server.js
+  console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  console.error("!!! [Firebase Init] CRITICAL INITIALIZATION FAILED:");
+  console.error(`!!! Error Message: ${error.message}`);
+  console.error("!!! Check .env variables (FIREBASE_SERVICE_ACCOUNT_PATH, FIREBASE_STORAGE_BUCKET),");
+  console.error("!!! key file path/permissions, and Firebase project settings.");
+  console.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+  firebaseInstances._initializationError = error;
 }
 
-// Export the object containing the instances (or nulls if failed)
 module.exports = {
     firebaseInstances
 };

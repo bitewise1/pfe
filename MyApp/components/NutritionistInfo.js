@@ -180,7 +180,7 @@ export default function NutritionistInfo() {
                 <Divider style={[styles.Divider, { width: Dimensions.get('window').width * 0.9 }]} />
                 <Text style={styles.nutritionistName}>About</Text>
                 <Text style={styles.nutritionistSpecialization}>{shortBio}</Text>
-                <Image source={require('../assets/Images/orangeExtraction.png')} style={styles.littleOrange} />
+             
 
                 {/* Button Container - Ensure this style exists */}
                 <View style={styles.buttonContainer}>

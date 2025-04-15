@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 // --- ^ ^ ^ --- End Added --- ^ ^ ^ ---
 import { AuthContext } from './AuthContext'; // Import AuthContext
-
+import Octicons from '@expo/vector-icons/Octicons';
 // Define styles locally ONLY IF they are missing from your main Styles.js
 const localStyles = StyleSheet.create({
     loadingStyle: { // Style for the ActivityIndicator to match icon size
@@ -47,12 +47,6 @@ export default function TabNavigation() {
         const previousCoachId = previousCoachIdRef.current; // Get previous value
         console.log(`[TabNav Effect Trigger] PrevCoach: ${previousCoachId}, CurrCoach: ${activeCoachId}, Loading: ${isCoachStatusLoading}, Focused: ${isFocused}, User: ${!!user}`);
 
-        // --- CONDITIONS ---
-        // 1. Ensure user is logged in.
-        // 2. Ensure the navigator is focused.
-        // 3. Ensure coach status is not currently loading.
-        // 4. Ensure activeCoachId is known (not undefined).
-        // 5. CRITICAL: Ensure the activeCoachId *actually changed* from the previous render.
         if (user && isFocused && !isCoachStatusLoading && activeCoachId !== undefined && activeCoachId !== previousCoachId) {
 
             console.log(`TabNav Effect: Coach ID CHANGED from ${previousCoachId} to ${activeCoachId}. Processing navigation...`);
@@ -128,7 +122,7 @@ export default function TabNavigation() {
             {/* Chatbot Button (Original Image) */}
             <TouchableOpacity onPress={() => navigation.navigate('Chatbot')} disabled={isCoachStatusLoading} >
                 {/* Uses your existing bot style -> styles.bot */}
-                <Image source={require('../assets/Images/bot.png')} style={styles.bot}/>
+                <Ionicons name="chatbubble-ellipses-outline" size={28} color="black" />
             </TouchableOpacity>
 
         </View>

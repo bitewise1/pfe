@@ -1,47 +1,40 @@
 // server.js
-require("dotenv").config(); // MUST BE ABSOLUTE FIRST LINE
+require("dotenv").config();
 console.log("ENV Check - Service Account Path from .env:", process.env.FIREBASE_SERVICE_ACCOUNT_PATH);
 
 const express = require("express");
 const cors = require("cors");
 
-// Require the config file - this runs the synchronous initialization code inside it NOW
 const { firebaseInstances } = require("./config/firebase");
 
-// --- !!! STRICT CHECK IMMEDIATELY AFTER REQUIRE !!! ---
+// --- Strict Check (Keep this) ---
 if (firebaseInstances._initializationError || !firebaseInstances.db || !firebaseInstances.auth || !firebaseInstances.admin) {
-   console.error("---------------------------------------------------------");
    console.error("CRITICAL: Server cannot start due to Firebase initialization failure.");
-   if(firebaseInstances._initializationError) {
-       console.error("Initialization Error Details:", firebaseInstances._initializationError.message);
-   } else {
-       console.error("Reason: One or more Firebase instances (db, auth, admin) are null after initialization attempt.");
-   }
-   console.error("Please check console logs above for specific Firebase Init errors,");
-   console.error("verify .env path, and service account key file validity.");
-   console.error("---------------------------------------------------------");
-   process.exit(1); // HARD EXIT - Do not proceed if Firebase isn't ready
+   // ... (rest of error handling) ...
+   process.exit(1);
 }
+console.log("Firebase initialization check passed in server.js.");
 // --- End Strict Check ---
 
-// If we reached here, Firebase seems okay.
-console.log("Firebase initialization check passed in server.js. DB/Auth/Admin should be available.");
-
-// --- Import routes (they can now safely require config/firebase) ---
+// --- Import routes ---
 const authRoutes = require("./Routes/authRoutes");
 const userRoutes = require("./Routes/userRoutes");
-const expertRoutes = require("./Routes/expertRoutes"); // Assuming this exists
+const expertRoutes = require("./Routes/expertRoutes");
 const nutritionPlanRoutes = require("./Routes/nutritionPlanRoutes");
 const recipesRoutes = require('./Routes/recipesRoutes');
-const logMealRoutes = require('./Routes/logMealRoutes'); // Use correct variable name if different
+const logMealRoutes = require('./Routes/logMealRoutes');
 const profileRoutes = require('./Routes/profileRoutes');
 const coachingRoutes = require('./Routes/coachingRoutes');
 
 const app = express();
 
 // --- Middleware ---
-app.use(express.json());
+// Apply CORS globally - this is generally safe and needed
 app.use(cors());
+
+// Apply express.json() ONLY where needed, typically *within* specific routers
+// We will apply it in the route files themselves if they handle JSON bodies.
+// DO NOT apply app.use(express.json()) globally here if you have multipart routes.
 
 // --- Basic Route ---
 app.get("/", (req, res) => {
@@ -49,23 +42,27 @@ app.get("/", (req, res) => {
 });
 
 // --- Mount Routes ---
-app.use("/auth", authRoutes);
-app.use("/user", userRoutes);
-app.use("/expert", expertRoutes); // Assuming this exists
-app.use("/nutritionPlan", nutritionPlanRoutes);
-app.use('/recipes', recipesRoutes);
-app.use('/logMeal', logMealRoutes); 
-app.use('/user', profileRoutes); 
-app.use('/coaching', coachingRoutes);
-// --- Error Handler ---
+// Apply express.json() before routers that NEED it
+app.use("/auth", express.json(), authRoutes); // Auth routes likely use JSON
+app.use("/user", express.json(), userRoutes); // User routes likely use JSON
+app.use("/expert", expertRoutes);
+console.log("[Routes] Mounted /expert (handles its own body parsing)");
+app.use("/nutritionPlan", express.json(), nutritionPlanRoutes); // Nutrition plan routes likely use JSON
+app.use('/recipes', express.json(), recipesRoutes); // Recipes routes likely use JSON
+app.use('/logMeal', express.json(), logMealRoutes); // logMeal routes likely use JSON
+app.use('/profile', express.json(), profileRoutes); // profile routes likely use JSON
+app.use('/coaching', express.json(), coachingRoutes); // coaching routes likely use JSON
+
+// --- Error Handler (Keep this) ---
 app.use((err, req, res, next) => {
   console.error("Unhandled Route Error:", err.stack);
   res.status(500).json({ error: "Une erreur interne est survenue sur le serveur." });
 });
 
-// --- Start Server ---
+// --- Start Server (Keep this) ---
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur le port ${PORT}. Firebase connection verified.`);
-  console.log(`Backend URL appears to be: ${process.env.BACKEND_URL || 'Not Set'}`); // Log backend URL
+app.listen(PORT, '0.0.0.0', () => { // Explicitly listen on 0.0.0.0
+  console.log(`Serveur démarré sur le port ${PORT} pour toutes les interfaces. Firebase connection verified.`);
+  console.log(`Emulator should connect via http://10.0.2.2:${PORT}`);
+  console.log(`Physical devices on same WiFi should connect via local IP (check ipconfig/ifconfig) on port ${PORT}`);
 });
