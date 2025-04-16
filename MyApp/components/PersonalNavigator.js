@@ -1,10 +1,6 @@
-import WelcomeScreen from './WelcomeScreen';
+
 import NameScreen from './NameScreen';
-import LogIn from './LogIn';
-import ResetPassword from './ResetPassword';
-import UserType from './UserType';
 import GoalScreen from './GoalScreen'; 
-import NutritionForm from './NutritionForm';
 import SettingProfile from './SettingProfile';
 import MotivationalScreen from './MotivationalScreen';
 import TransformationScreen from './TransformationScreen';
@@ -38,40 +34,31 @@ import ActiveCoachDashboard from './ActiveCoachDashboard';
 
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+
 
 
 
 const Stack = createStackNavigator();
-export default function AppNavigator(){
+export default function PersonalNavigator(){
     return(
-        <NavigationContainer>
+ 
             <Stack.Navigator screenOptions={{headerShown: false}}> 
-                <Stack.Screen name='WelcomeScreen' component={WelcomeScreen}/> 
-                <Stack.Screen name='LogIn' component={LogIn} />
-                <Stack.Screen name='UserType' component={UserType}/>
-                <Stack.Screen name='SignUp' component={SignUp}/>
-                <Stack.Screen name='NameScreen' component={NameScreen} />
-                <Stack.Screen name='ResetPassword' component={ResetPassword}/>
-                <Stack.Screen name='GoalScreen' component={GoalScreen}/>
-                <Stack.Screen name= 'SettingProfile' component={SettingProfile}/>
-                <Stack.Screen name='NutritionForm' component={NutritionForm}/>
-                <Stack.Screen name='MotivationalScreen' component={MotivationalScreen}/>
-                <Stack.Screen name='TransformationScreen' component={TransformationScreen}/>
-                <Stack.Screen name='DietaryPreferences' component={DietaryPreferences}/>
-                <Stack.Screen name='ActivityLevel' component={ActivityLevel}/>
-                <Stack.Screen name='Gratitude' component={Gratitude}/>
+                
+             
                 <Stack.Screen name='Home' component={Home}/>
-                <Stack.Screen name='Chatbot' component={Chatbot}/>
-                <Stack.Screen name='Profile' component={Profile}/>
                 <Stack.Screen name='Recipes' component={Recipes}/>
-                <Stack.Screen name='NutritionSection' component={NutritionSection}/>
+                <Stack.Screen name = 'RecipeDetail' component={RecipeDetail}/>
+                <Stack.Screen name='Profile' component={Profile}/>
+                <Stack.Screen name='Chatbot' component={Chatbot}/>
                 <Stack.Screen name='Notifications' component={Notifications}/>
+                <Stack.Screen name = 'FindSpecialist' component={FindSpecialist}/>
+                <Stack.Screen name='NutritionSection' component={NutritionSection}/>
+                <Stack.Screen name = 'NutritionistInfo' component={NutritionistInfo}/>
                 <Stack.Screen name='Settings' component={Settings}/>
                 <Stack.Screen name='NutritionPlan' component={NutritionPlan}/>
                 <Stack.Screen name ='AddMeal' component={AddMeal}/>
                 <Stack.Screen name ='ActivityScreen' component={ActivityScreen}/>
-                <Stack.Screen name = 'NutritionistInfo' component={NutritionistInfo}/>
+                <Stack.Screen name = 'ActiveCoachDashboard' component={ActiveCoachDashboard}/>
                 <Stack.Screen name = 'MessagesGuidance' component={MessagesGuidance}/>
                 <Stack.Screen name = 'ProfessionalChat' component={ProfessionalChat}/> 
                 <Stack.Screen name = 'ProfileInfoSettings' component={ProfileInfoSettings} />
@@ -80,11 +67,22 @@ export default function AppNavigator(){
                 <Stack.Screen name = 'AccountSettings' component={AccountSettings} />
                 <Stack.Screen name = 'RemindersSettings' component={RemindersSettings}/>
                 <Stack.Screen name = 'LogOutSettings' component={LogOutSettings}/>
-                <Stack.Screen name = 'EstimationScreen' component={EstimationScreen} />
-                <Stack.Screen name = 'RecipeDetail' component={RecipeDetail}/>
-                <Stack.Screen name = 'FindSpecialist' component={FindSpecialist}/>
-                <Stack.Screen name = 'ActiveCoachDashboard' component={ActiveCoachDashboard}/>
+                
+                
+                
+                
+
+                <Stack.Screen name='SignUp' component={SignUp}/>
+                <Stack.Screen name='NameScreen' component={NameScreen} />
+                <Stack.Screen name='GoalScreen' component={GoalScreen}/>
+                <Stack.Screen name= 'SettingProfile' component={SettingProfile}/>
+                <Stack.Screen name='MotivationalScreen' component={MotivationalScreen}/>
+               <Stack.Screen name='TransformationScreen' component={TransformationScreen}/>
+               <Stack.Screen name='DietaryPreferences' component={DietaryPreferences}/>
+               <Stack.Screen name='ActivityLevel' component={ActivityLevel}/>
+               <Stack.Screen name = 'EstimationScreen' component={EstimationScreen} />
+               <Stack.Screen name='Gratitude' component={Gratitude}/>
             </Stack.Navigator>
-        </NavigationContainer>
+
     );
 }

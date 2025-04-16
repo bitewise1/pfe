@@ -49,14 +49,21 @@ export default function LogIn() {
       console.log("Backend response:", data);
 
       if (response.ok) {
-        const user = data.user;
-        setUser(user);
-        navigation.navigate('Home', {
-          uid: user.uid,
-          plan: user.nutritionPlan,
-          preferences: user.dietaryPreferences || [],
-          userGoal: user.goal
-        });
+        if (user.userType === 'Professional') {
+          // Professional (nutritionist): navigate to their specialized screen.
+          navigation.navigate('HomeCoach', { uid: user.uid });
+        } else if (user.userType === 'Personal') {
+          // Personal user: navigate to Home and pass any additional fields.
+          navigation.navigate('Home', {
+            uid: user.uid,
+            plan: user.nutritionPlan,
+            preferences: user.dietaryPreferences || [],
+            userGoal: user.goal,
+          });
+        } else {
+          // Handle unexpected user type
+          Alert.alert("Erreur", "Type d'utilisateur inconnu.");
+        }
       }
       
        else {

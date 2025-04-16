@@ -1,10 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+// App.js
+import React, { useContext } from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
-import AppNavigator from './components/AppNavigator';
-import { useFonts, Quicksand_400Regular, Quicksand_700Bold, Quicksand_500Medium, Quicksand_600SemiBold } from '@expo-google-fonts/quicksand';
+import { NavigationContainer } from '@react-navigation/native';
+import AuthNavigator from './components/AuthNavigator';
+import PersonalNavigator from './components/PersonalNavigator';
+import ProfessionalNavigator from './components/ProfessionalNavigator';
+import { AuthProvider, AuthContext } from './components/AuthContext';
+import {
+  useFonts,
+  Quicksand_400Regular,
+  Quicksand_500Medium,
+  Quicksand_600SemiBold,
+  Quicksand_700Bold,
+} from '@expo-google-fonts/quicksand';
 
-import { AuthProvider } from './components/AuthContext'; 
+function RootNavigator() {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#4F7B4A" />
+      </View>
+    );
+  }
+
+  // No user: show common auth flow (Welcome, LogIn, UserType, ResetPassword, plus sign-up flows).
+  if (!user) {
+    return <AuthNavigator />;
+  }
+
+  // Logged in: choose the appropriate navigator based on user.userType.
+  return user.userType === 'Professional' ? (
+    <ProfessionalNavigator />
+  ) : (
+    <PersonalNavigator />
+  );
+}
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -15,26 +48,27 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color="#4F7B4A" style={styles.loader} />;
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#4F7B4A" />
+      </View>
+    );
   }
 
   return (
     <PaperProvider>
       <AuthProvider>
-        <View style={styles.container}>
-          <AppNavigator />
-        </View>
+        {/* Use one NavigationContainer around the RootNavigator */}
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
       </AuthProvider>
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5E4C3',
-  },
-  loader: {
+  loaderContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

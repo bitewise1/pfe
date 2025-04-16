@@ -245,7 +245,7 @@ export default function NutritionForm() {
       console.log('[Submit] Response:', response.status, responseData);
       if (response.ok) {
         Alert.alert('Success', responseData.message || 'Registration successful!');
-        navigation.navigate('Gratitude');
+       
       } else {
         Alert.alert('Registration Failed', responseData.error || `Server error (${response.status}).`);
       }

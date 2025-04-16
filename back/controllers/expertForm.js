@@ -74,14 +74,12 @@ exports.registerNutritionist = async (req, res) => {
         // 3. Create User in Firebase Authentication (remains the same)
         let userRecord;
         try {
-            console.log(`[Auth] Attempting to create user for email: ${email}`);
-            userRecord = await auth.createUser({ /* ... user details ... */ });
-            console.log(`[Auth] User created successfully. UID: ${userRecord.uid}`);
+          console.log(`[Auth] Attempting to create user for email: ${email}`);
+          userRecord = await auth.createUser({ email, password });
+          console.log(`[Auth] User created successfully. UID: ${userRecord.uid}`);
         } catch (authError) {
-            // ... handle auth errors and return ...
-             console.error('[Auth Error] Failed to create user:', authError.code, authError.message);
-             // ... specific error handling ...
-            return res.status(500).json({ error: "Failed to create user account...", details: authError.message });
+          console.error('[Auth Error] Failed to create user:', authError.code, authError.message);
+          return res.status(500).json({ error: "Failed to create user account...", details: authError.message });
         }
 
         // 4. Upload Files to Firebase Storage (remains the same)
