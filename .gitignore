@@ -1,0 +1,4 @@
+
+# Ignore Firebase Admin SDK secret key file
+back\config\bitewise-4d93e-12b4b8cb50ac.json
+back\.env
