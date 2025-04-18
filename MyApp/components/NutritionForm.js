@@ -9,74 +9,68 @@ import {
   Alert,
   Platform,
   ActivityIndicator,
-  KeyboardAvoidingView, // Keep for better UX
-  // Linking // Keep if you add 'Open Settings' functionality
+  KeyboardAvoidingView, 
 } from 'react-native';
-import styles from './Styles'; // Uses styles from your original './Styles.js'
+import styles from './Styles'; 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons'; // Used for back button, upload icons, previews
-import Icon from 'react-native-vector-icons/Feather'; // Used for original password visibility toggle
+import { Ionicons } from '@expo/vector-icons'; 
+import Icon from 'react-native-vector-icons/Feather'; 
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
-import { Picker } from '@react-native-picker/picker'; // Needed for Specialization
-import PhoneInput from 'react-native-phone-number-input'; // Keep the phone input library
+import { Picker } from '@react-native-picker/picker'; 
+import PhoneInput from 'react-native-phone-number-input'; 
 
-// --- Configuration ---
-const API_BASE_URL = 'http://10.0.2.2:3000'; // ADJUST IF YOUR SERVER IP IS DIFFERENT
+const API_BASE_URL = 'http://10.0.2.2:3000'; 
 
 export default function NutritionForm() {
 
-  // --- State Variables (From Corrected Logic) ---
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); // Used for both password fields in original structure
+  const [password, setPassword] = useState(''); 
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState(''); // Raw phone number input state
-  const [formattedPhoneNumber, setFormattedPhoneNumber] = useState(''); // Formatted number for backend
+  const [phoneNumber, setPhoneNumber] = useState(''); 
+  const [formattedPhoneNumber, setFormattedPhoneNumber] = useState(''); 
   const [specialization, setSpecialization] = useState('');
   const [workplace, setWorkplace] = useState('');
   const [shortBio, setShortBio] = useState('');
-  // Detailed file states: { uri, name, type }
   const [profileImage, setProfileImage] = useState(null);
   const [certificateImage, setCertificateImage] = useState(null);
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Original used setIsPasswordVisble
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
   const [yearsOfExperience, setYearsOfExperience] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // --- Refs ---
-  const phoneInput = useRef(null); // Ref for PhoneInput library
+  const phoneInput = useRef(null); 
   const navigation = useNavigation();
-  const route = useRoute(); // Used for navigation and params if needed
-  const { userType } = route.params || {}; // Get userType from params if needed
-  // --- Request Permissions (From Corrected Logic) ---
+  const route = useRoute(); 
+  const { userType } = route.params || {}; 
+
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
         const libraryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (libraryStatus.status !== 'granted') {
           console.warn('[Permissions] Media Library permissions were not granted.');
-          // Alert.alert(...); // Keep alert if needed
+          
         }
       }
     })();
   }, []);
 
-  // --- Phone Number Handling (From Corrected Logic) ---
   const handlePhoneChange = (number) => {
-    setPhoneNumber(number); // Update raw input state
+    setPhoneNumber(number); 
     const checkValid = phoneInput.current?.isValidNumber(number);
     if (checkValid) {
         const numberInfo = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
-        setFormattedPhoneNumber(numberInfo?.formattedNumber || ''); // Store formatted number
+        setFormattedPhoneNumber(numberInfo?.formattedNumber || ''); 
         console.log("Formatted Phone:", numberInfo?.formattedNumber);
     } else {
-        setFormattedPhoneNumber(''); // Clear if not valid
+        setFormattedPhoneNumber(''); 
         console.log("Invalid phone number input:", number);
     }
   };
 
-  // --- Image/Document Picking (From Corrected Logic - Robust Version) ---
   const pickImage = async (type) => {
     try {
       if (type === 'certificate') {
@@ -124,7 +118,7 @@ export default function NutritionForm() {
             Alert.alert('Image Error', 'Could not get image location.');
             return;
           }
-          // Simplified determination from corrected logic
+
           let mimeType = asset.mimeType || 'image/jpeg';
           let fileExtension = 'jpg';
           const uriParts = asset.uri.split('.');
@@ -140,12 +134,12 @@ export default function NutritionForm() {
           }
           const validImageMimeTypes = ['image/jpeg', 'image/png', 'image/jpg'];
           if (!validImageMimeTypes.includes(mimeType.toLowerCase())) {
-              mimeType = 'image/jpeg'; fileExtension = 'jpg'; // Fallback
+              mimeType = 'image/jpeg'; fileExtension = 'jpg'; 
           }
           let baseName = asset.fileName || `profile_${Date.now()}`;
           const nameParts = baseName.split('.');
           if (nameParts.length > 1 && ['jpg', 'jpeg', 'png'].includes(nameParts[nameParts.length - 1].toLowerCase())) {
-              nameParts.pop(); // Remove existing extension
+              nameParts.pop(); 
               baseName = nameParts.join('.');
           }
           const finalFileName = `${baseName}.${fileExtension}`;
@@ -160,10 +154,9 @@ export default function NutritionForm() {
     }
   };
 
-  // --- Form Submission (From Corrected Logic) ---
   const handleSubmit = async () => {
     console.log('[Submit] Starting...');
-    // --- Frontend Validation (Using corrected logic) ---
+
     let errors = [];
     const trimmedFirstName = firstName.trim();
     const trimmedLastName = lastName.trim();
@@ -197,7 +190,7 @@ export default function NutritionForm() {
       Alert.alert('Missing Information', `Please complete:\n- ${errors.join('\n- ')}`); 
       return; 
     }
-    // --- End Validation ---
+
 
     console.log('[Submit] Validation OK. Creating FormData...');
     const formData = new FormData();
@@ -212,7 +205,7 @@ export default function NutritionForm() {
     formData.append('workplace', workplace.trim());
     formData.append('shortBio', shortBio.trim());
     formData.append('userType', userType || ''); 
-    // Append Files (checking objects)
+
     if (!certificateImage || !certificateImage.uri || !certificateImage.name || !certificateImage.type) { 
       Alert.alert('File Error', 'Certificate details incomplete.'); 
       return; 
@@ -232,7 +225,6 @@ export default function NutritionForm() {
       name: profileImage.name 
     });
 
-    // --- Send Request ---
     setIsSubmitting(true);
     console.log('[Submit] Sending to API...');
     try {
@@ -257,14 +249,13 @@ export default function NutritionForm() {
     }
   };
 
-  // --- Render Component (Using Original Structure/Styles + Corrected Logic/State) ---
   return (
     <KeyboardAvoidingView
        behavior={Platform.OS === "ios" ? "padding" : "height"}
        style={styles.container}
        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
     >
-      {/* Back Button and Leaves from original */}
+
       <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.backButton, { marginTop: 45 }]}>
         <Ionicons name="arrow-back" size={38} />
       </TouchableOpacity>
@@ -272,11 +263,9 @@ export default function NutritionForm() {
       <Image source={require('../assets/Images/leaf.png')} style={styles.bottomLeaf} />
 
       <ScrollView showsVerticalScrollIndicator={false} style={{ width: '100%', marginVertical: 55, paddingHorizontal: 20 }}>
-        {/* Use generic title instead of relying on params */}
         <Text style={styles.helloText}>Create Nutritionist Account</Text>
         <Text style={styles.secondaryText}>Enter your professional details</Text>
 
-        {/* --- Fields using Original Labels/Styles but Corrected State --- */}
         <Text style={[styles.caloriesText, { padding: 10 }]}>First Name</Text>
         <TextInput
             style={styles.input}

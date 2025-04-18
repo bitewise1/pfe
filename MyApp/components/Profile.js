@@ -351,5 +351,3 @@ const chartConfig = {
     barPercentage: 0.6, propsForLabels: { fontSize: 11 }, propsForBackgroundLines: { strokeDasharray: "", stroke: "rgba(0, 0, 0, 0.15)" },
     style: { borderRadius: 16 }, formatYLabel: (y) => `${Math.round(parseFloat(y))}`, formatTopBarValue: (value) => `${Math.round(parseFloat(value))}`, barRadius: 4,
 };
-
-// No local StyleSheet.create - relying on styles from ./Styles.js

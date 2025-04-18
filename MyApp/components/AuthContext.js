@@ -1,7 +1,6 @@
-// components/AuthContext.js
 import React, { createContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Import JS SDK auth instance
+import { auth } from '../firebaseConfig'; 
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000';
 
@@ -19,7 +18,7 @@ const defaultContextValue = {
 export const AuthContext = createContext(defaultContextValue);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // This will eventually hold the full backend user object (user.data)
+  const [user, setUser] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [activeCoachId, setActiveCoachId] = useState(undefined);
   const [isCoachStatusLoading, setIsCoachStatusLoading] = useState(true);
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     return null;
   }, []);
 
-  // Existing coaching status fetch code remains here...
+
 
   const fetchCoachingStatus = useCallback(async () => {
     console.log("AuthContext: fetchCoachingStatus STARTING...");
@@ -91,7 +90,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [isCoachStatusLoading]);
 
-  // --- Firebase Auth State Listener with backend user fetch ---
+ 
   useEffect(() => {
     console.log("AuthContext: Setting up auth listener.");
     let isMounted = true;
@@ -103,7 +102,7 @@ export const AuthProvider = ({ children }) => {
       if (firebaseUser) {
         try {
           const token = await firebaseUser.getIdToken(true);
-          // Fetch the full user data from your backend.
+
           const response = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
@@ -114,7 +113,6 @@ export const AuthProvider = ({ children }) => {
           });
           if (response.ok) {
             const data = await response.json();
-            // Assume the backend returns a full user object (user.data) including userType
             console.log("AuthContext Listener: Full user data received:", data.user);
             setUser(data.user);
           } else {

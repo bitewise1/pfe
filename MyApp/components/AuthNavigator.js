@@ -1,4 +1,3 @@
-// AuthNavigator.js
 import WelcomeScreen from './WelcomeScreen';
 import LogIn from './LogIn';
 import ResetPassword from './ResetPassword';

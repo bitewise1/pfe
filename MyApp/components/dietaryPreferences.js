@@ -21,12 +21,12 @@ export default function DietaryPreferences() {
 
   const handleOptions = (option) => {
     if (option === "Other ✏️") {
-      setIsOtherSelected((prev) => !prev); // Toggle input visibility
+      setIsOtherSelected((prev) => !prev); 
       if (!isOtherSelected) {
-        setSelectedOptions([...selectedOptions, option]); // Add "Other"
+        setSelectedOptions([...selectedOptions, option]);
       } else {
-        setSelectedOptions(selectedOptions.filter((item) => item !== "Other ✏️")); // Remove if deselected
-        setCustomDiet(""); // Reset input when deselected
+        setSelectedOptions(selectedOptions.filter((item) => item !== "Other ✏️")); 
+        setCustomDiet(""); 
       }
     } else {
       setSelectedOptions((prevSelected) =>
@@ -107,7 +107,7 @@ export default function DietaryPreferences() {
       </TouchableOpacity>
     ))}
 
-    {/* ✅ Show Input when "Other" is Selected */}
+ 
     {isOtherSelected && (
       <TextInput
         style={[styles.optionButton, styles.optionText]}

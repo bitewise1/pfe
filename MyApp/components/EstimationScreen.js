@@ -26,7 +26,7 @@ import Animated, {
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 
-const API_BASE_URL = 'http://10.0.2.2:3000'; // Replace with your actual backend URL
+const API_BASE_URL = 'http://10.0.2.2:3000'; 
 
 
 const EstimationScreen = ({ route }) => {
@@ -42,13 +42,11 @@ const EstimationScreen = ({ route }) => {
     const fetchUserAndPlan = async () => {
       try {
         setLoading(true);
-        
-        // 1. Fetch user data from backend
+
         const userResponse = await axios.get(`${API_BASE_URL}/user/${uid}`);
         const userData = userResponse.data;
         setUserData(userData);
         
-        // 2. Get or create nutrition plan from backend
         const planResponse = await axios.put(`${API_BASE_URL}/nutritionPlan/${uid}`);
         console.log('Plan response:', planResponse.data);
         const calculatedPlan = planResponse.data.nutritionPlan;
@@ -78,12 +76,10 @@ const EstimationScreen = ({ route }) => {
       <Image source={require('../assets/Images/leaf.png')} style= {styles.bottomLeaf}/>
 
 
-      {/* Title with Staggered Animation */}
       <Animated.View entering={FadeInUp.duration(800).delay(200)}>
         <Text style={styles.cardTitleEstim}>Your Daily Goal</Text>
       </Animated.View>
 
-      {/* User Card with Animation */}
       <Animated.View 
         style={styles.userCardEstim}
         entering={FadeInDown.duration(600).delay(300)}
@@ -95,14 +91,12 @@ const EstimationScreen = ({ route }) => {
         </View>
       </Animated.View>
 
-      {/* Nutrition Targets Card with Staggered Animation */}
       <Animated.View 
         style={styles.targetsCard}
         entering={FadeInUp.duration(600).delay(400)}
       >
         <Text style={styles.cardHeaderEstim}>Daily Targets</Text>
-        
-        {/* Calories */}
+
         <Animated.View 
           style={styles.targetRow}
           entering={FadeInDown.duration(500).delay(500)}
@@ -114,7 +108,6 @@ const EstimationScreen = ({ route }) => {
           <Text style={styles.targetValue}>{nutritionPlan?.calories} kcal</Text>
         </Animated.View>
 
-        {/* Protein */}
         <Animated.View 
           style={styles.targetRow}
           entering={FadeInDown.duration(500).delay(550)}
@@ -126,7 +119,6 @@ const EstimationScreen = ({ route }) => {
           <Text style={styles.targetValue}>{nutritionPlan?.protein}g</Text>
         </Animated.View>
 
-        {/* Carbs */}
         <Animated.View 
           style={styles.targetRow}
           entering={FadeInDown.duration(500).delay(600)}
@@ -138,7 +130,6 @@ const EstimationScreen = ({ route }) => {
           <Text style={styles.targetValue}>{nutritionPlan?.carbs}g</Text>
         </Animated.View>
 
-        {/* Fat */}
         <Animated.View 
           style={styles.targetRow}
           entering={FadeInDown.duration(500).delay(650)}
@@ -150,7 +141,6 @@ const EstimationScreen = ({ route }) => {
           <Text style={styles.targetValue}>{nutritionPlan?.fat}g</Text>
         </Animated.View>
 
-        {/* Fiber */}
         <Animated.View 
           style={[styles.targetRow, styles.fiberRow]}
           entering={FadeInDown.duration(500).delay(700)}
@@ -166,7 +156,6 @@ const EstimationScreen = ({ route }) => {
         </Animated.View>
       </Animated.View>
 
-      {/* Animated Action Button */}
       <Animated.View
         entering={FadeInUp.duration(800).delay(800)}
       >
@@ -179,7 +168,7 @@ const EstimationScreen = ({ route }) => {
             }
             navigation.navigate('Home', {
               uid,
-              plan: nutritionPlan, // This is now guaranteed to exist
+              plan: nutritionPlan,
               preferences: userData?.dietaryPreferences || [],
               userGoal: userData?.goal
             });

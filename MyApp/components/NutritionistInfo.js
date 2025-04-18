@@ -1,42 +1,36 @@
-// screens/NutritionistInfo.js
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import {
     View, Text, TouchableOpacity, Image, Dimensions,
-    Alert, ActivityIndicator, StyleSheet // Added StyleSheet for local styles if needed
+    Alert, ActivityIndicator, StyleSheet 
 } from "react-native";
-import styles from "./Styles"; // Use YOUR existing main styles file
+import styles from "./Styles"; 
 import { Ionicons } from "@expo/vector-icons";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { Divider } from "react-native-paper";
-import { AuthContext } from './AuthContext'; // Adjust path
+import { AuthContext } from './AuthContext'; 
 
-// --- API Base URL ---
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000'; // Adjust if needed
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000'; 
 
-// --- Define or Merge Styles ---
-// If these styles are already in your main Styles.js, you don't need this block
 const componentStyles = StyleSheet.create({
     buttonDisabled: { opacity: 0.5 },
-    buttonPending: { backgroundColor: '#FFA726' }, // Example orange
-    buttonAccepted: { backgroundColor: '#66BB6A' }, // Example green
-    buttonHasCoach: { backgroundColor: '#78909C' }, // Example grey
-     // Ensure styles for header, topRow, headerLogo, appName, profile image,
-     // details container, nutritionistName, etc. are defined in your main 'styles' import
-     // Add any styles missing from your main sheet if necessary
-     profileImageStyle: { // Example - use your actual style name
+    buttonPending: { backgroundColor: '#FFA726' }, 
+    buttonAccepted: { backgroundColor: '#66BB6A' }, 
+    buttonHasCoach: { backgroundColor: '#78909C' }, 
+   
+     profileImageStyle: { 
         width: 190, height: 190, borderRadius: 95, alignSelf: 'center',
         zIndex: 100, position: 'absolute', top: 110,
         borderWidth: 3, borderColor: '#F5E4C3'
      },
-     detailsContainerStyle: { // Example - use your actual style name
+     detailsContainerStyle: {
         backgroundColor: '#F5E4C3', width: Dimensions.get('window').width, height: '60%',
         borderTopLeftRadius: 50, borderTopRightRadius: 50,
-        paddingTop: 20, // Might need adjustment based on image position/size
+        paddingTop: 20, 
         paddingHorizontal: 20, position: 'absolute', bottom: 0
      },
-     // Add other potentially missing styles if needed
+    
 });
-// --- End Styles Definition ---
+
 
 
 export default function NutritionistInfo() {
@@ -45,43 +39,42 @@ export default function NutritionistInfo() {
     const route = useRoute();
 
     const {
-        nutritionistId, // EXPECTING THIS ID
+        nutritionistId,
         firstName, lastName, workplace, yearsOfExperience,
-        shortBio, specialization, profileImage // Ensure profileImage is the correct URL string
+        shortBio, specialization, profileImage 
     } = route.params || {};
 
-    // --- State ---
+ 
     const [requestState, setRequestState] = useState('loading_status');
 
-    // --- Check initial status ---
+
     useEffect(() => {
         const checkStatus = async () => {
             setRequestState('loading_status');
             if (!user || !nutritionistId) { setRequestState('error'); return; }
-            if (activeCoachId) { setRequestState('has_coach'); return; } // Check active coach first
+            if (activeCoachId) { setRequestState('has_coach'); return; } 
 
-            try { // Check specific request status
+            try { 
                 const token = await getIdToken(); if (!token) throw new Error("Auth token missing.");
                 const response = await fetch(`${API_BASE_URL}/coaching/request-status/${nutritionistId}`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await response.json(); if (!response.ok) throw new Error(data.message || `Error ${response.status}`);
 
-                // Update state based on specific status
+
                 if (data.status === 'pending') setRequestState('pending');
                 else if (data.status === 'accepted') setRequestState('accepted');
                 else if (data.status === 'selected') setRequestState('has_coach');
-                else setRequestState('idle'); // status === 'none'
+                else setRequestState('idle'); 
 
             } catch (error) { console.error("NutritionistInfo: Error checking status:", error); setRequestState('error'); }
         };
         checkStatus();
-    }, [user, nutritionistId, activeCoachId, getIdToken]); // Dependencies
+    }, [user, nutritionistId, activeCoachId, getIdToken]); 
 
 
-    // --- Handle Send Request Action ---
     const handleSendRequest = useCallback(async () => {
         if (requestState !== 'idle' && requestState !== 'error') { console.log(`Send req blocked: ${requestState}`); return; }
 
-        setRequestState('loading'); // Set state to 'loading' for the send action itself
+        setRequestState('loading'); 
         try {
             const token = await getIdToken(); if (!token) throw new Error("Auth session expired.");
 
@@ -98,45 +91,38 @@ export default function NutritionistInfo() {
                 throw new Error(data.error || `Request failed (${response.status})`);
             }
 
-            // --- Success ---
             Alert.alert("Request Sent!", "Your request has been sent successfully.");
 
-            // *** THIS IS THE CORRECTED NAVIGATION LOGIC ***
             console.log("Navigating to FindSpecialist with newPendingRequest");
-            // Make sure 'FindSpecialist' is the actual name of the screen in your navigator
-            // that displays the pending/accepted lists.
+           
             navigation.navigate('FindSpecialist', {
                 newPendingRequest: {
-                    id: data.requestId || `temp_${Date.now()}`, // Use ID from backend if returned
+                    id: data.requestId || `temp_${Date.now()}`,
                     nutritionistId: nutritionistId,
                     status: 'pending',
-                    details: { // Pass details needed to display the card on the next screen
+                    details: { 
                         firstName, lastName, specialization,
-                        profileImageUrl: profileImage, // Pass the correct image URL field name
+                        profileImageUrl: profileImage, 
                         yearsOfExperience
-                        // Add any other fields your NutritionistCard or display logic needs
+                 
                     }
                 }
             });
-            // *** END CORRECTED NAVIGATION LOGIC ***
+          
 
         } catch (error) {
             console.error("Error sending coach request:", error);
             Alert.alert("Error Sending Request", error.message || "An unexpected error occurred.");
-            // Revert state only if it wasn't set to 'pending' due to a conflict
              if (requestState !== 'pending') {
                  setRequestState('error');
             }
         }
-        // No need to set loading false, navigation occurs or state changes
     }, [
-        // Dependencies for useCallback:
         requestState, user, nutritionistId, getIdToken, navigation,
-        firstName, lastName, specialization, profileImage, yearsOfExperience // Include details used in navigation param
+        firstName, lastName, specialization, profileImage, yearsOfExperience 
     ]);
 
 
-    // --- Determine Button Appearance/Behavior ---
     let buttonText = "Send request";
     let isButtonDisabled = false;
     let showLoader = requestState === 'loading_status' || requestState === 'loading';
@@ -150,12 +136,12 @@ export default function NutritionistInfo() {
         case 'error': buttonText = "Retry Request"; isButtonDisabled = false; break;
         case 'idle': default: buttonText = "Send request"; isButtonDisabled = false; break;
     }
-    if (!user || !nutritionistId) { isButtonDisabled = true; } // Always disable if no user/target
+    if (!user || !nutritionistId) { isButtonDisabled = true; } 
 
 
-    // --- RETURN ---
+
     return (
-        // Assuming styles.mainContainer exists in your ./Styles import
+
         <View style={[styles.mainContainer, { backgroundColor: '#88A76C' }]}>
             {/* Header */}
             <View style={styles.header}>

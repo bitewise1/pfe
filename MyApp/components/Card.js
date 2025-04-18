@@ -1,10 +1,9 @@
-// Card.js (Frontend)
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import styles from './Styles';
 export default function Card({ title, description, calories, imageUrl, onPress }) {
-  // Ensure the image URL is valid and formatted correctly
-  const validImageUrl = imageUrl || 'https://via.placeholder.com/150';  // Fallback if imageUrl is missing
+
+  const validImageUrl = imageUrl || 'https://via.placeholder.com/150'; 
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.cardRecipeContainer}>
