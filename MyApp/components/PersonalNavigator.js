@@ -7,7 +7,7 @@ import TransformationScreen from './TransformationScreen';
 import DietaryPreferences from './DietaryPreferences'; 
 import ActivityLevel from './ActivityLevel';
 import Gratitude from './Gratitude';
-import SignUp from './SignUp';
+
 import Home from './Home';
 import Chatbot from './Chatbot';
 import Profile from './Profile';
@@ -71,8 +71,8 @@ export default function PersonalNavigator(){
                 
                 
                 
+                
 
-                <Stack.Screen name='SignUp' component={SignUp}/>
                 <Stack.Screen name='NameScreen' component={NameScreen} />
                 <Stack.Screen name='GoalScreen' component={GoalScreen}/>
                 <Stack.Screen name= 'SettingProfile' component={SettingProfile}/>

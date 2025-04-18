@@ -1,11 +1,10 @@
-// routes/expertRoutes.js
 const express = require('express');
 const router = express.Router();
-const expertForm = require('../controllers/expertForm'); // Assuming controller is here
+const expertForm = require('../controllers/expertForm'); 
 
 router.post(
     '/register',
-    expertForm.uploadMiddleware, // <-- MUST BE HERE
+    expertForm.uploadMiddleware, 
     expertForm.registerNutritionist
 );
 

@@ -1,11 +1,8 @@
-// controllers/authController.js
-
 const { firebaseInstances } = require('../config/firebase');
 const admin = firebaseInstances.admin; // Admin SDK (for token verification and auth)
 const db = firebaseInstances.db;       // Firestore instance
 const FieldValue = admin.firestore.FieldValue; // For serverTimestamp, etc.
 
-// Helper function: check that the Admin SDK and Firestore are initialized.
 function checkAuthFirebaseInitialized(res, checkDb = true) {
   let missing = [];
   if (!admin) missing.push("Admin SDK");
@@ -19,7 +16,6 @@ function checkAuthFirebaseInitialized(res, checkDb = true) {
   return true;
 }
 
-// FINAL LOGIN FUNCTION
 const login = async (req, res) => {
   if (!checkAuthFirebaseInitialized(res, true)) return;
 
@@ -74,7 +70,7 @@ const login = async (req, res) => {
   }
 };
 
-// FINAL REGISTER FUNCTION (example for Personal users)
+
 const register = async (req, res) => {
   if (!checkAuthFirebaseInitialized(res, true)) return;
   
@@ -84,7 +80,6 @@ const register = async (req, res) => {
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    // For example, check only the "users" collection for Personal registration.
     const existingUserQuery = db.collection("users").where("email", "==", email);
     const existingUserSnapshot = await existingUserQuery.get();
     if (!existingUserSnapshot.empty) {
@@ -118,7 +113,6 @@ const register = async (req, res) => {
   }
 };
 
-// FINAL SOCIAL AUTH FUNCTION (Placeholder: adjust as needed)
 const socialAuth = async (req, res) => {
   try {
     const { idToken } = req.body;

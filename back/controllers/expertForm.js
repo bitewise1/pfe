@@ -1,18 +1,15 @@
-// controllers/expertForm.js
 const { firebaseInstances } = require('../config/firebase.js');
 const multer = require('multer');
 
 const { admin, db, auth, storage, _initializationError } = firebaseInstances;
 
-// --- Configure multer (remains the same) ---
 const upload = multer({
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB max file size
+        fileSize: 5 * 1024 * 1024 
     },
     storage: multer.memoryStorage()
 });
 
-// --- Helper function to check Firebase readiness (remains the same) ---
 function checkFirebaseReady(res, action = "perform action") {
     if (_initializationError || !admin || !db || !auth || !storage) {
         const missing = [
@@ -30,9 +27,9 @@ function checkFirebaseReady(res, action = "perform action") {
     return true;
 }
 
-// SignUp Controller
+
 exports.registerNutritionist = async (req, res) => {
-    // 1. Check Firebase readiness
+  
     if (!checkFirebaseReady(res, "register nutritionist")) {
         return;
     }
@@ -45,33 +42,27 @@ exports.registerNutritionist = async (req, res) => {
     } : 'No files object received');
 
     try {
-        // 2. Destructure and Validate Request Body and Files
+  
         const {
             firstName, lastName, email, password, confirmPassword, phoneNumber,
-            yearsOfExperience, // Keep as string from frontend
+            yearsOfExperience, 
             specialization, workplace, shortBio, userType
         } = req.body;
 
-        // --- Validation (Keep comprehensive validation) ---
-        const requiredFields = [ /* ... keep as before ... */ ];
-        // ... keep all validation checks for fields and files ...
-        const years = parseInt(yearsOfExperience, 10); // Still parse for validation
-        if (isNaN(years) || years < 0 || years > 70) { // Adjusted max years slightly
+        const requiredFields = [ 'firstName', 'lastName', 'email', 'password', 'confirmPassword', 'phoneNumber', 'yearsOfExperience', 'specialization', 'workplace', 'shortBio' ];
+       
+        const years = parseInt(yearsOfExperience, 10); 
+        if (isNaN(years) || years < 0 || years > 70) { 
              return res.status(400).json({ error: "Invalid years of experience (must be a number between 0-70)." });
         }
-        // ... other validation rules ...
-
-        // Ensure files exist (keep file validation)
         if (!req.files || !req.files.professionalCertificate || !req.files.professionalCertificate[0]) { /* ... */ }
         const certificate = req.files.professionalCertificate[0];
          if (!req.files || !req.files.profileImage || !req.files.profileImage[0]) { /* ... */ }
         const profileImage = req.files.profileImage[0];
-         // ... keep file type/size validation ...
+        
 
         console.log('[Validation Passed]');
-        // --- End Validation ---
-
-        // 3. Create User in Firebase Authentication (remains the same)
+       
         let userRecord;
         try {
           console.log(`[Auth] Attempting to create user for email: ${email}`);
@@ -82,13 +73,12 @@ exports.registerNutritionist = async (req, res) => {
           return res.status(500).json({ error: "Failed to create user account...", details: authError.message });
         }
 
-        // 4. Upload Files to Firebase Storage (remains the same)
         const bucket = storage.bucket();
         let certificateUrl = '';
         let profileImageUrl = '';
         try {
             console.log(`[Storage] Uploading files for UID: ${userRecord.uid}`);
-            // Upload Certificate
+           
             const safeCertificateName = certificate.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
             const certificateFileName = `nutritionist_certificates/${userRecord.uid}/${Date.now()}_${safeCertificateName}`;
             const certificateFile = bucket.file(certificateFileName);
@@ -106,29 +96,26 @@ exports.registerNutritionist = async (req, res) => {
             profileImageUrl = profileImageFile.publicUrl();
             console.log(`[Storage] Profile image uploaded successfully: ${profileImageUrl}`);
         } catch (storageError) {
-             // ... handle storage errors, delete user, and return ...
+           
              console.error(`[Storage Error] Failed to upload files for UID: ${userRecord.uid}`, storageError);
              await auth.deleteUser(userRecord.uid).catch(delErr => console.error("Cleanup Error", delErr));
              return res.status(500).json({ error: "User created, but failed to upload required files.", details: storageError.message });
         }
-
-        // 5. Save Additional User Info to Firestore *** (MODIFIED STRUCTURE) ***
         try {
             console.log(`[Firestore] Saving nutritionist details for UID: ${userRecord.uid} with OLD structure`);
             const nutritionistData = {
                 firstName,
                 lastName,
                 email,
-                phoneNumber: phoneNumber, // Keep formatted phone number
-                // *** Use OLD field names for URLs ***
+                phoneNumber: phoneNumber, 
                 professionalCertificate: certificateUrl,
                 profileImage: profileImageUrl,
-                // *** Use the string directly from req.body for years ***
-                yearsOfExperience: yearsOfExperience, // Store as STRING
+             
+                yearsOfExperience: yearsOfExperience, 
                 specialization,
                 workplace,
                 shortBio,
-                // Keep createdAt for sorting/info
+               
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
                 userType: userType || "Professional", 
             };
@@ -137,27 +124,26 @@ exports.registerNutritionist = async (req, res) => {
             console.log(`[Firestore] Nutritionist data saved successfully using OLD structure for UID: ${userRecord.uid}`);
 
         } catch (firestoreError) {
-             // ... handle firestore errors, delete user, and return ...
+           
             console.error(`[Firestore Error] Failed to save data for UID: ${userRecord.uid}`, firestoreError);
             await auth.deleteUser(userRecord.uid).catch(delErr => console.error("Cleanup Error", delErr));
              return res.status(500).json({ error: "User account created and files uploaded, but failed to save details.", details: firestoreError.message });
         }
 
-        // 6. Successful Response (remains the same)
+     
         console.log(`[Success] Registration complete for UID: ${userRecord.uid}`);
         res.status(201).json({
-            message: "Nutritionist registration successful!", // Simpler message might be suitable now
+            message: "Nutritionist registration successful!",
             userId: userRecord.uid
         });
 
     } catch (error) {
-        // ... handle unexpected errors ...
+       
         console.error('[Unhandled Registration Error]', error);
-        res.status(500).json({ /* ... generic error response ... */ });
+        res.status(500).json({ error: "An unexpected error occurred during registration.", details: error.message });
     }
 };
 
-// Export the Multer middleware (remains the same)
 exports.uploadMiddleware = upload.fields([
     { name: 'professionalCertificate', maxCount: 1 },
     { name: 'profileImage', maxCount: 1 }

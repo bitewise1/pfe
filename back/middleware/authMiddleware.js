@@ -1,4 +1,3 @@
-// middleware/authMiddleware.js
 const { firebaseInstances } = require('../config/firebase');
 const admin = firebaseInstances.admin;
 
@@ -15,7 +14,7 @@ exports.requireAuth = async (req, res, next) => {
              return res.status(500).json({ error: "Server configuration error (Auth Init)." });
         }
         const decodedToken = await firebaseInstances.auth.verifyIdToken(idToken);
-        req.user = decodedToken; // Attach user payload
+        req.user = decodedToken; 
         console.log(`Auth Middleware: Token verified for UID ${req.user.uid}`);
         next();
     } catch (error) {
