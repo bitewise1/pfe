@@ -2,3 +2,24 @@
 # Ignore Firebase Admin SDK secret key file
 back\config\bitewise-4d93e-12b4b8cb50ac.json
 back\.env
+# Ignore specific large CSV files by path
+back/RAW_recipes.csv
+foodComDataset/PP_recipes.csv
+foodComDataset/RAW_interactions.csv
+
+# Ignore Jupyter Notebook checkpoint directories (RECOMMENDED pattern)
+# This will ignore ANY .ipynb_checkpoints directory in your project
+**/.ipynb_checkpoints/
+
+# --- OR --- Be more specific if you prefer (less common):
+# back/.ipynb_checkpoints/
+
+# Ignore the entire foodComDataset directory (RECOMMENDED if it only contains data)
+# This is often better than listing each file if the whole dir is data
+foodComDataset/
+
+# === End of added lines ===
+
+# Other standard ignores (you might already have these)
+node_modules/
+*.log
