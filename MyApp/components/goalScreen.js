@@ -6,7 +6,7 @@ import {useState} from 'react';
 import { Button } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../firebaseConfig'; 
-import { AuthContext } from '../components/AuthContext';
+import { AuthContext } from './AuthContext';
 import { useContext } from 'react';
 export default function GoalScreen() {
   const { user } = useContext(AuthContext);
