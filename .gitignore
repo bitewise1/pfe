@@ -2,6 +2,9 @@
 # Ignore Firebase Admin SDK secret key file
 back\config\bitewise-4d93e-12b4b8cb50ac.json
 back\.env
+back/config/bitewise-4d93e-firebase-adminsdk-fbsvc-393d22dc5c.json
+back/config/bitewise-4d93e-12b4b8cb50ac.json
+back/config/bitewise-4d93e-firebase-adminsdk-fbsvc-bcf7bb6be9.json
 # Ignore specific large CSV files by path
 back/RAW_recipes.csv
 foodComDataset/PP_recipes.csv
