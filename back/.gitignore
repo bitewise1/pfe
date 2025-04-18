@@ -10,6 +10,8 @@ firebase-debug.*.log*
 # Firebase cache
 .firebase/
 
+# Dependencies
+/node_modules
 # Firebase config
 
 # Uncomment this if you'd like others to create their own Firebase project.
@@ -44,8 +46,6 @@ bower_components
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
-node_modules/
 
 # Optional npm cache directory
 .npm

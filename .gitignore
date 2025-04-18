@@ -12,7 +12,7 @@ foodComDataset/RAW_interactions.csv
 **/.ipynb_checkpoints/
 
 # --- OR --- Be more specific if you prefer (less common):
-# back/.ipynb_checkpoints/
+back/.ipynb_checkpoints/
 
 # Ignore the entire foodComDataset directory (RECOMMENDED if it only contains data)
 # This is often better than listing each file if the whole dir is data
@@ -21,5 +21,5 @@ foodComDataset/
 # === End of added lines ===
 
 # Other standard ignores (you might already have these)
-node_modules/
+
 *.log
